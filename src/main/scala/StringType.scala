@@ -1,6 +1,6 @@
 import scala.util.matching.Regex
 
-trait StringType extends Type[String] {
+trait StringType extends DataType[String] {
   override def toString(t: String): String = t
 
   override def fromString(str: String): String = str
@@ -20,6 +20,7 @@ object EmailType extends StringType {
 }
 
 object PhoneType extends StringType {
+  private val regex: Regex = """""".r
 
   override def display(value: String, format: String): String = ???
 
@@ -31,3 +32,4 @@ object PhoneType extends StringType {
     }
   }
 }
+

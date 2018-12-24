@@ -1,4 +1,4 @@
-trait  Type[T] {
+trait  DataType[T] {
   def toString(t : T) : String
 
   def fromString(str : String) : T

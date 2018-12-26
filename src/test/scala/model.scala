@@ -1,4 +1,4 @@
-object Test {
+object model {
 
   implicit val typeSystem: TypeSystem = new TypeSystem()
 

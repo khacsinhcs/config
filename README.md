@@ -33,7 +33,6 @@ Example, we want config domain object like:
   }
 
   object Teacher extends Type(name = "Teacher", description = "He teach student") with HasContactInfo
-}
 
 ```
 

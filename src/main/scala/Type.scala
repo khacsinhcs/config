@@ -1,0 +1,92 @@
+
+trait HasType {
+
+  protected var _name: String = _
+
+  def name: String = _name
+
+  def f[T](field: Field[T]): Field[T]
+
+  def f[T](name: String, label: String, required: Boolean, dataType: DataType[T]) = f(new Field[T](name, label, required, dataType))
+
+  def f[T](name: String, label: String, dataType: DataType[T]) = f(name, label, required = true, dataType)
+
+  def f[T](name: String, dataType: DataType[T]) = f(name, name, dataType)
+}
+
+class Type(name: String, description: String)(implicit typeSystem: TypeSystem) extends HasType {
+
+  import scala.collection.mutable
+
+  private val mapFields: mutable.Map[String, Field[_]] = mutable.Map()
+
+  typeSystem ++ this
+
+  def f[T](field: Field[T]): Field[T] = {
+    mapFields.put(field.name, field)
+    field
+  }
+}
+
+
+trait DataType[T] {
+  def toString(t: T): String
+
+  def fromString(str: String): T
+
+  def display(value: T, format: String): String
+
+  def validate(value: T): Option[String]
+}
+
+trait StringType extends DataType[String] {
+  override def toString(t: String): String = t
+
+  override def fromString(str: String): String = str
+}
+
+object StringType extends StringType {
+  override def display(value: String, format: String): String = value
+
+  override def validate(value: String): Option[String] = None
+}
+
+object EmailType extends StringType {
+
+  import scala.util.matching.Regex
+
+  private val regex: Regex = """^[a-zA-Z0-9\.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$""".r
+
+  override def validate(value: String): Option[String] = {
+    value match {
+      case null => Some("Email can't null")
+      case mail if mail.trim.isEmpty => Some("Empty email")
+      case mail if regex.findFirstIn(mail).isDefined => None
+      case _ => Some("Wrong email format")
+    }
+  }
+
+  override def display(value: String, format: String): String = value
+}
+
+object PhoneType extends StringType {
+
+  import scala.util.matching.Regex
+
+  private val regex: Regex = """""".r
+
+  override def display(value: String, format: String): String = ???
+
+  override def validate(value: String): Option[String] = ???
+
+  override def fromString(str: String): String = {
+    str match {
+      case null => null
+    }
+  }
+}
+
+class NumberType {
+
+}
+

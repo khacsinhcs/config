@@ -5,13 +5,15 @@ trait HasType {
 
   def name: String = _name
 
+  def ?(name: String): Option[Field[_]]
+
   def f[T](field: Field[T]): Field[T]
 
-  def f[T](name: String, label: String, required: Boolean, dataType: DataType[T]) = f(new Field[T](name, label, required, dataType))
+  def f[T](name: String, label: String, required: Boolean, dataType: DataType[T]) = f[T](new Field[T](name, label, required, dataType))
 
-  def f[T](name: String, label: String, dataType: DataType[T]) = f(name, label, required = true, dataType)
+  def f[T](name: String, label: String, dataType: DataType[T]) = f[T](name, label, required = true, dataType)
 
-  def f[T](name: String, dataType: DataType[T]) = f(name, name, dataType)
+  def f[T](name: String, dataType: DataType[T]) = f[T](name, name, dataType)
 }
 
 class Type(name: String, description: String)(implicit typeSystem: TypeSystem) extends HasType {
@@ -21,6 +23,9 @@ class Type(name: String, description: String)(implicit typeSystem: TypeSystem) e
   private val mapFields: mutable.Map[String, Field[_]] = mutable.Map()
 
   typeSystem ++ this
+
+
+  override def ?(name: String): Option[Field[_]] = mapFields.get(name)
 
   def f[T](field: Field[T]): Field[T] = {
     mapFields + (field.name -> field)

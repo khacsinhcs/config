@@ -17,8 +17,7 @@ object model {
     val age = f("age", StringType)
   }
 
-  object Teacher extends Type(name = "Teacher", description = "He teach student") with HasContactInfo {
-  }
+  object Teacher extends Type(name = "Teacher", description = "He teach student") with HasContactInfo
 
   def main(args: Array[String]): Unit = {
     print("Run demo")

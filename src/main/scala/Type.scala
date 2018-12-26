@@ -23,7 +23,7 @@ class Type(name: String, description: String)(implicit typeSystem: TypeSystem) e
   typeSystem ++ this
 
   def f[T](field: Field[T]): Field[T] = {
-    mapFields.put(field.name, field)
+    mapFields + (field.name -> field)
     field
   }
 }

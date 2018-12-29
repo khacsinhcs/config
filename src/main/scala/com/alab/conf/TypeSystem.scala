@@ -1,6 +1,7 @@
 package com.alab.conf
 
-import scala.collection.mutabletype
+import scala.collection.mutable
+
 
 object TypeSystem {
   val types : mutable.Map[String, Type] = mutable.Map[String, Type]()

@@ -1,4 +1,7 @@
 import com.alab.conf._
+import com.alab.model.MapValues
+
+import scala.collection.immutable.HashMap
 
 trait HasName extends HasType {
   val first_name: Field[String] = f("first_name", "First name", StringType)
@@ -20,7 +23,7 @@ trait HasKeyName extends HasType {
 trait HasContactInfo extends HasName with HasPhone
 
 object Student extends Type(name = "Student", description = "Student") with HasId with HasContactInfo {
-  val age: Field[String] = f("age", StringType)
+  val age: Field[Int] = f("age", IntType)
   val teacher: FK[String] = fk("teacher", StringKey, Teacher)
 }
 
@@ -28,11 +31,12 @@ object Teacher extends Type(name = "Teacher", description = "He teach student") 
 
 
 object Config {
-  def bootstrap : Unit = {
+  def bootstrap: Unit = {
     Teacher
     Student
   }
 }
+
 import org.scalatest.{FlatSpec, Matchers}
 
 class Test extends FlatSpec with Matchers {
@@ -45,6 +49,19 @@ class Test extends FlatSpec with Matchers {
 
   "First name field" should "get front type" in {
     Teacher ? "first_name" should be(Some(Teacher.first_name))
+  }
+
+  it should "get value from Map" in {
+    def values = new MapValues(HashMap(
+      "first_name" -> "Sinh",
+      "age" -> "18"
+    ))
+
+    import Student._
+    values ~> first_name should be(Some("Sinh"))
+    values ~> last_name should be(None)
+    values ~> age should be(Some(18))
+    values demand first_name should be("Sinh")
   }
 
 }

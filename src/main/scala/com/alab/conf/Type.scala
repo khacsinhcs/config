@@ -133,4 +133,5 @@ class IntegerType extends DataType[Int] {
   override def validate(value: Int): Option[String] = None
 }
 
+object IntType extends IntegerType
 object IdKey extends IntegerType

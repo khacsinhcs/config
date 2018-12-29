@@ -65,7 +65,17 @@ class Test extends FlatSpec with Matchers {
     the [IllegalStateException] thrownBy {
       student demand last_name
     } should have message "Field(last_name, Last name) is demand"
+  }
 
+  it should "to string has value" in {
+    def student = new MapValues(HashMap(
+      "first_name" -> "Sinh",
+      "age" -> "18"
+    ))
+
+    val str = student toString Student
+    println(str)
+    //str should contain "Student"
   }
 
 }

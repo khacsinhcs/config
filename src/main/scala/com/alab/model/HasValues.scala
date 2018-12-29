@@ -1,6 +1,6 @@
 package com.alab.model
 
-import com.alab.conf.Field
+import com.alab.conf.{Field, Type}
 
 trait HasValues {
   protected def _get[T](field: Field[T]): Option[T]
@@ -20,6 +20,8 @@ trait HasValues {
       case None => t
     }
   }
+
+  def toString(t: Type): String
 }
 
 
@@ -33,4 +35,12 @@ class MapValues(values: Map[String, _]) extends HasValues {
     }
   }
 
+  override def toString(t: Type): String = {
+    t.fields.flatMap(f => {
+      _get(f) match {
+        case None => None
+        case Some(v) => Some(f.dataType.fromString(v.asInstanceOf))
+      }
+    }).mkString(t.name + "(", " ,", ")")
+  }
 }

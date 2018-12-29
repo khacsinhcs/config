@@ -21,7 +21,14 @@ trait HasValues {
     }
   }
 
-  def toString(t: Type): String
+  def toString(t: Type): String = {
+    t.fields.flatMap(f => {
+      _get(f) match {
+        case None => None
+        case Some(v) => Some(f.name + ": " + v.toString)
+      }
+    }).mkString(t.name + "(", ", ", ")")
+  }
 }
 
 
@@ -33,14 +40,5 @@ class MapValues(values: Map[String, _]) extends HasValues {
       case Some(str: String) => Some(field.dataType.fromString(str))
       case Some(t) => Some(t.asInstanceOf[FieldType])
     }
-  }
-
-  override def toString(t: Type): String = {
-    t.fields.flatMap(f => {
-      _get(f) match {
-        case None => None
-        case Some(v) => Some(f.name + ": " + v.toString)
-      }
-    }).mkString(t.name + "(", ", ", ")")
   }
 }

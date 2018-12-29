@@ -106,7 +106,7 @@ object StringKey extends StringType {
   override def validate(value: String): Option[String] = {
     value match {
       case null => Some("Key can't null")
-      case value.trim == "" => Some("Don't allow empty")
+      case someString if someString.trim == "" => Some("Don't allow empty")
       case _ => None
     }
   }

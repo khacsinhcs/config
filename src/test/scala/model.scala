@@ -75,7 +75,7 @@ class Test extends FlatSpec with Matchers {
 
     val str = student toString Student
     println(str)
-    //str should contain "Student"
+    str should include ("Student")
   }
 
 }

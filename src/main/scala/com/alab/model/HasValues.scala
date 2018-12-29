@@ -39,8 +39,8 @@ class MapValues(values: Map[String, _]) extends HasValues {
     t.fields.flatMap(f => {
       _get(f) match {
         case None => None
-        case Some(v) => Some(f.dataType.fromString(v.asInstanceOf))
+        case Some(v) => Some(f.name + ": " + v.toString)
       }
-    }).mkString(t.name + "(", " ,", ")")
+    }).mkString(t.name + "(", ", ", ")")
   }
 }

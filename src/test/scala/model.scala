@@ -62,7 +62,9 @@ class Test extends FlatSpec with Matchers {
     student ~> age should be(Some(18))
     student demand first_name should be("Sinh")
 
-    student demand last_name should be(new IllegalStateException())
+    the [IllegalStateException] thrownBy {
+      student demand last_name
+    } should have message "Field(last_name, Last name) is demand"
 
   }
 

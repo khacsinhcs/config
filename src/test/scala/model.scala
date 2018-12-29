@@ -8,14 +8,22 @@ trait HasPhone extends HasType {
   val phone: Field[String] = f("phone", "Phone number", required = false, PhoneType)
 }
 
-trait HasContactInfo extends HasName with HasPhone
-
-object Student extends Type(name = "Student", description = "Student") with HasContactInfo {
-  val age: Field[String] = f("age", StringType)
-  val teacher: FK[String] = fk("teacher", StringType, Teacher)
+trait HasId extends HasType {
+  val id: Field[Int] = f("id", "Id", required = true, IdKey)
 }
 
-object Teacher extends Type(name = "Teacher", description = "He teach student") with HasContactInfo
+trait HasKeyName extends HasType {
+  val key_name: Field[String] = f("key_name", "Key Name", required = true, StringKey)
+}
+
+trait HasContactInfo extends HasName with HasPhone
+
+object Student extends Type(name = "Student", description = "Student") with HasId with HasContactInfo {
+  val age: Field[String] = f("age", StringType)
+  val teacher: FK[String] = fk("teacher", StringKey, Teacher)
+}
+
+object Teacher extends Type(name = "Teacher", description = "He teach student") with HasKeyName with HasContactInfo
 
 import org.scalatest.{FlatSpec, Matchers}
 

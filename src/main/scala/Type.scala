@@ -100,7 +100,36 @@ object PhoneType extends StringType {
   }
 }
 
-class NumberType {
+object StringKey extends StringType {
+  override def display(value: String, format: String): String = value
 
+  override def validate(value: String): Option[String] = {
+    value match {
+      case null => Some("Key can't null")
+      case value.trim == "" => Some("Don't allow empty")
+      case _ => None
+    }
+  }
 }
 
+class NumberType extends DataType[Double]{
+  override def toString(t: Double): String = String.valueOf(t)
+
+  override def fromString(str: String): Double = str.toDouble
+
+  override def display(value: Double, format: String): String = toString(value)
+
+  override def validate(value: Double): Option[String] = None
+}
+
+class IntegerType extends DataType[Int] {
+  override def toString(t: Int): String = String.valueOf(t)
+
+  override def fromString(str: String): Int = str.toInt
+
+  override def display(value: Int, format: String): String = toString()
+
+  override def validate(value: Int): Option[String] = None
+}
+
+object IdKey extends IntegerType

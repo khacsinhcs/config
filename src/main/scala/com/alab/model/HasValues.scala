@@ -10,6 +10,7 @@ trait HasValues {
   def demand[T](field: Field[T]): T = {
     this ~> field match {
       case Some(t) => t
+      case None => throw new IllegalStateException(s"$field is demand")
     }
   }
 

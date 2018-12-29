@@ -61,6 +61,9 @@ class Test extends FlatSpec with Matchers {
     student ~> last_name should be(None)
     student ~> age should be(Some(18))
     student demand first_name should be("Sinh")
+
+    student demand last_name should be(new IllegalStateException())
+
   }
 
 }

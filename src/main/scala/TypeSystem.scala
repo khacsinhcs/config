@@ -1,10 +1,10 @@
 import scala.collection.mutable
 
-class TypeSystem {
+object TypeSystem {
   val types : mutable.Map[String, Type] = mutable.Map[String, Type]()
 
-  def ++(t: Type): TypeSystem = {
-    types + (t.name -> t)
+  def ++(t: Type): TypeSystem.type = {
+    types.put(t.name, t)
     this
   }
 

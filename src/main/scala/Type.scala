@@ -1,10 +1,6 @@
 
 trait HasType {
 
-  protected var _name: String = _
-
-  def name: String = _name
-
   def ?(name: String): Option[Field[_]]
 
   def f[T](field: Field[T]): Field[T]
@@ -16,19 +12,19 @@ trait HasType {
   def f[T](name: String, dataType: DataType[T]): Field[T] = f[T](name, name, dataType)
 }
 
-class Type(name: String, description: String)(implicit typeSystem: TypeSystem) extends HasType {
+class Type(val name: String, description: String) extends HasType {
 
   import scala.collection.mutable
 
   private val mapFields: mutable.Map[String, Field[_]] = mutable.Map()
 
-  typeSystem ++ this
+  TypeSystem ++ this
 
 
   override def ?(name: String): Option[Field[_]] = mapFields.get(name)
 
   def f[T](field: Field[T]): Field[T] = {
-    mapFields + (field.name -> field)
+    mapFields.put(field.name, field)
     field
   }
 }

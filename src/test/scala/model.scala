@@ -19,16 +19,17 @@ object Student extends Type(name = "Student", description = "Student") with HasC
 object Teacher extends Type(name = "Teacher", description = "He teach student") with HasContactInfo
 
 
-
 class Test extends FlatSpec with Matchers {
+  //Bootstrap object
+  Teacher
+  Student
 
   "Teacher" should "get front type system" in {
-    Teacher // scala class loader
-    TypeSystem ? "Teacher" should be (Some(Teacher))
+    TypeSystem ? "Teacher" should be(Some(Teacher))
   }
 
   "First name field" should "get front type" in {
-    Teacher ? "first_name" should be (Some(Teacher.first_name))
+    Teacher ? "first_name" should be(Some(Teacher.first_name))
   }
 
 }

@@ -1,7 +1,5 @@
 import org.scalatest.{FlatSpec, Matchers}
 
-import scala.Some
-
 trait HasName extends HasType {
   val first_name = f("first_name", "First name", StringType)
   val last_name = f("last_name", "Last name", StringType)
@@ -15,6 +13,7 @@ trait HasContactInfo extends HasName with HasPhone
 
 object Student extends Type(name = "Student", description = "Student") with HasContactInfo {
   val age = f("age", StringType)
+  val teacher = fk("teacher", StringType, Teacher)
 }
 
 object Teacher extends Type(name = "Teacher", description = "He teach student") with HasContactInfo

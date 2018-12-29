@@ -24,7 +24,7 @@ object Teacher extends Type(name = "Teacher", description = "He teach student") 
 class Test extends FlatSpec with Matchers {
 
   "Teacher" should "get front type system" in {
-    val test = Teacher // scala class loader
+    Teacher // scala class loader
     TypeSystem ? "Teacher" should be (Some(Teacher))
   }
 

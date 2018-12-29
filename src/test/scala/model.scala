@@ -30,8 +30,8 @@ object Student extends Type(name = "Student", description = "Student") with HasI
 object Teacher extends Type(name = "Teacher", description = "He teach student") with HasKeyName with HasContactInfo
 
 
-object Config {
-  def bootstrap: Unit = {
+object Bootstrap {
+  def allTypes(): Unit = {
     Teacher
     Student
   }
@@ -40,8 +40,7 @@ object Config {
 import org.scalatest.{FlatSpec, Matchers}
 
 class Test extends FlatSpec with Matchers {
-  //Bootstrap object
-  Config bootstrap
+  Bootstrap allTypes()
 
   "Teacher" should "get front type system" in {
     TypeSystem ? "Teacher" should be(Some(Teacher))
@@ -52,16 +51,16 @@ class Test extends FlatSpec with Matchers {
   }
 
   it should "get value from Map" in {
-    def values = new MapValues(HashMap(
+    def student = new MapValues(HashMap(
       "first_name" -> "Sinh",
       "age" -> "18"
     ))
 
     import Student._
-    values ~> first_name should be(Some("Sinh"))
-    values ~> last_name should be(None)
-    values ~> age should be(Some(18))
-    values demand first_name should be("Sinh")
+    student ~> first_name should be(Some("Sinh"))
+    student ~> last_name should be(None)
+    student ~> age should be(Some(18))
+    student demand first_name should be("Sinh")
   }
 
 }

@@ -2,12 +2,12 @@ package com.alab.model
 
 import com.alab.conf.Field
 
-import scala.collection.mutable
-
 trait HasValues {
-  def ~>[T](field: Field[T]): Option[T]
+  protected def _get[T](field: Field[T]): Option[T]
 
-  def demand[T](field: Field[T]) : T = {
+  def ~>[T](field: Field[T]): Option[T] = _get(field)
+
+  def demand[T](field: Field[T]): T = {
     this ~> field match {
       case Some(t) => t
     }
@@ -22,9 +22,9 @@ trait HasValues {
 }
 
 
-class MapValues(values : Map[String, _]) extends HasValues {
+class MapValues(values: Map[String, _]) extends HasValues {
 
-  override def ~>[FieldType](field: Field[FieldType]): Option[FieldType] = {
+  override protected def _get[FieldType](field: Field[FieldType]): Option[FieldType] = {
     values.get(field.name) match {
       case None => None
       case Some(str: String) => Some(field.dataType.fromString(str))

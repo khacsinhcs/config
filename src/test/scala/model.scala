@@ -26,12 +26,18 @@ object Student extends Type(name = "Student", description = "Student") with HasI
 
 object Teacher extends Type(name = "Teacher", description = "He teach student") with HasKeyName with HasContactInfo
 
+
+object Config {
+  def bootstrap : Unit = {
+    Teacher
+    Student
+  }
+}
 import org.scalatest.{FlatSpec, Matchers}
 
 class Test extends FlatSpec with Matchers {
   //Bootstrap object
-  Teacher
-  Student
+  Config bootstrap
 
   "Teacher" should "get front type system" in {
     TypeSystem ? "Teacher" should be(Some(Teacher))

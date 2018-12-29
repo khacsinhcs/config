@@ -1,4 +1,3 @@
-import org.scalatest.{FlatSpec, Matchers}
 
 trait HasName extends HasType {
   val first_name: Field[String] = f("first_name", "First name", StringType)
@@ -18,6 +17,7 @@ object Student extends Type(name = "Student", description = "Student") with HasC
 
 object Teacher extends Type(name = "Teacher", description = "He teach student") with HasContactInfo
 
+import org.scalatest.{FlatSpec, Matchers}
 
 class Test extends FlatSpec with Matchers {
   //Bootstrap object

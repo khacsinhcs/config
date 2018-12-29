@@ -17,7 +17,7 @@ trait HasType {
 
   def fk[T](name: String, label: String, dataType: DataType[T], kind: Type): FK[T] = fk[T](name, label, required = true, dataType, kind)
 
-  def fk[T](name: String, dataType: DataType[T], kind: Type): Field[T] = fk[T](name, name, dataType, kind)
+  def fk[T](name: String, dataType: DataType[T], kind: Type): FK[T] = fk[T](name, name, dataType, kind)
 }
 
 class Type(val name: String, description: String) extends HasType {

@@ -17,22 +17,22 @@ Let's see. What will we do????
 
 Example, we want config domain object like:
 ```aidl
-  trait HasName extends HasType {
-    val first_name = f("first_name", "First name", StringType)
-    val last_name = f("last_name", "Last name", StringType)
+  trait HasName extends com.alab.type.HasType {
+    val first_name = f("first_name", "First name", com.alab.type.StringType)
+    val last_name = f("last_name", "Last name", com.alab.type.StringType)
   }
 
-  trait HasPhone extends HasType {
-    val phone = f("phone", "Phone number", required = false, PhoneType)
+  trait HasPhone extends com.alab.type.HasType {
+    val phone = f("phone", "Phone number", required = false, com.alab.type.PhoneType)
   }
 
   trait HasContactInfo extends HasName with HasPhone
 
-  object Student extends Type(name = "Student", description = "Student") with HasContactInfo {
-    val age = f("age", StringType)
+  object Student extends com.alab.type.Type(name = "Student", description = "Student") with HasContactInfo {
+    val age = f("age", com.alab.type.StringType)
   }
 
-  object Teacher extends Type(name = "Teacher", description = "He teach student") with HasContactInfo
+  object Teacher extends com.alab.type.Type(name = "Teacher", description = "He teach student") with HasContactInfo
 
 ```
 

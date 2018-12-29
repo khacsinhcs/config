@@ -1,3 +1,4 @@
+import com.alab.conf._
 
 trait HasName extends HasType {
   val first_name: Field[String] = f("first_name", "First name", StringType)

@@ -1,3 +1,4 @@
+package com.alab.conf
 
 trait HasType {
 

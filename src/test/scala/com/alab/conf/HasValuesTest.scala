@@ -15,7 +15,7 @@ class HasValuesTest extends FlatSpec with Matchers {
     ))
   }
   it should "get value from Map" in {
-    def student = initStudent
+    val student = initStudent
 
     import com.alab.model.Student._
     student ~> first_name should be(Some("Sinh"))
@@ -29,7 +29,7 @@ class HasValuesTest extends FlatSpec with Matchers {
   }
 
   it should "to string has value" in {
-    def student = initStudent
+    val student = initStudent
     val str = student toString Student
     println(str)
     str should include ("Student")

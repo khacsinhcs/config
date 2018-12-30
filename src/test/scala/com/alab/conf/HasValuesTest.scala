@@ -1,6 +1,6 @@
 package com.alab.conf
 
-import com.alab.Student
+import com.alab.model.Student
 import com.alab.model.{HasValues, MapValues}
 import org.scalatest.{FlatSpec, Matchers}
 
@@ -17,7 +17,7 @@ class HasValuesTest extends FlatSpec with Matchers {
   it should "get value from Map" in {
     def student = initStudent
 
-    import com.alab.Student._
+    import com.alab.model.Student._
     student ~> first_name should be(Some("Sinh"))
     student ~> last_name should be(None)
     student ~> age should be(Some(18))

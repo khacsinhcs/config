@@ -1,3 +1,5 @@
+package com.alab
+
 import com.alab.conf._
 
 trait HasName extends HasType {

@@ -1,7 +1,4 @@
 import com.alab.conf._
-import com.alab.model.MapValues
-
-import scala.collection.immutable.HashMap
 
 trait HasName extends HasType {
   val first_name: Field[String] = f("first_name", "First name", StringType)
@@ -37,45 +34,3 @@ object Bootstrap {
   }
 }
 
-import org.scalatest.{FlatSpec, Matchers}
-
-class Test extends FlatSpec with Matchers {
-  Bootstrap allTypes()
-
-  "Teacher" should "get front type system" in {
-    TypeSystem ? "Teacher" should be(Some(Teacher))
-  }
-
-  "First name field" should "get front type" in {
-    Teacher ? "first_name" should be(Some(Teacher.first_name))
-  }
-
-  it should "get value from Map" in {
-    def student = new MapValues(HashMap(
-      "first_name" -> "Sinh",
-      "age" -> "18"
-    ))
-
-    import Student._
-    student ~> first_name should be(Some("Sinh"))
-    student ~> last_name should be(None)
-    student ~> age should be(Some(18))
-    student demand first_name should be("Sinh")
-
-    the [IllegalStateException] thrownBy {
-      student demand last_name
-    } should have message "Field(last_name, Last name) is demand"
-  }
-
-  it should "to string has value" in {
-    def student = new MapValues(HashMap(
-      "first_name" -> "Sinh",
-      "age" -> "18"
-    ))
-
-    val str = student toString Student
-    println(str)
-    str should include ("Student")
-  }
-
-}

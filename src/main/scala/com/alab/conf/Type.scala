@@ -25,7 +25,7 @@ class Type(val name: String, description: String) extends HasType {
 
   import scala.collection.mutable
 
-  private val mapFields: mutable.Map[String, Field[_]] = mutable.Map()
+  private val mapFields: mutable.Map[String, Field[_]] = mutable.LinkedHashMap()
 
   TypeSystem ++ this
 
@@ -56,12 +56,16 @@ trait DataType[T] {
   def display(value: T, format: String): String
 
   def validate(value: T): Option[String]
+
+  def typeToString : String
 }
 
 trait StringType extends DataType[String] {
   override def toString(t: String): String = t
 
   override def fromString(str: String): String = str
+
+  override def typeToString: String = "String"
 }
 
 object StringType extends StringType {
@@ -125,6 +129,8 @@ class NumberType extends DataType[Double]{
   override def display(value: Double, format: String): String = toString(value)
 
   override def validate(value: Double): Option[String] = None
+
+  override def typeToString: String = "Double"
 }
 
 class IntegerType extends DataType[Int] {
@@ -135,6 +141,8 @@ class IntegerType extends DataType[Int] {
   override def display(value: Int, format: String): String = toString()
 
   override def validate(value: Int): Option[String] = None
+
+  override def typeToString: String = "Int"
 }
 
 object IntType extends IntegerType

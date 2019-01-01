@@ -28,8 +28,8 @@ class CaseClassTest extends FlatSpec with Matchers {
   it should "generate case class from Type" in {
     val student = Student
     val caseStudent = generate(student)
-    println(caseStudent)
+    val allClasses = TypeSystem.types.values.map(t => generate(t)).mkString("\n")
+    println(allClasses)
     caseStudent should startWith ("case class Student(")
   }
-
 }

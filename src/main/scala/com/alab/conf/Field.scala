@@ -1,7 +1,7 @@
 package com.alab.conf
 
 class Field[T](val name: String, val label: String, val required: Boolean, val dataType: DataType[T]) {
-  override def toString: String = s"Field($name, $label)"
+  override def toString: String = s"""Field(name: "$name", label: "$label", required: $required)"""
 }
 
 /**

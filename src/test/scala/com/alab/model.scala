@@ -14,7 +14,7 @@ package object model {
   }
 
   trait HasId extends HasType {
-    val id: Field[Int] = f("id", "Id", required = true, IdKey)
+    val id: Field[Int] = f("id", "Id", required = false, IdKey)
   }
 
   trait HasKeyName extends HasType {

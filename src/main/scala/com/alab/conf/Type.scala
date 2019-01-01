@@ -45,6 +45,7 @@ class Type(val name: String, description: String) extends HasType {
   def fields : Iterable[Field[_]] = {
     mapFields.values
   }
+
 }
 
 

@@ -17,10 +17,6 @@ Let's see. What will we do????
 
 Example, we want config domain object like:
 ```aidl
-  import com.alab.conf._
-  import com.alab.model.MapValues
-  
-  import scala.collection.immutable.HashMap
   
   trait HasName extends HasType {
     val first_name: Field[String] = f("first_name", "First name", StringType)
@@ -48,41 +44,23 @@ Example, we want config domain object like:
   
   object Teacher extends Type(name = "Teacher", description = "He teach student") with HasKeyName with HasContactInfo
   
-  
   object Bootstrap {
     def allTypes(): Unit = {
       Teacher
       Student
     }
   }
-  
-  import org.scalatest.{FlatSpec, Matchers}
-  
-  class Test extends FlatSpec with Matchers {
-    Bootstrap allTypes()
-  
-    "Teacher" should "get front type system" in {
-      TypeSystem ? "Teacher" should be(Some(Teacher))
-    }
-  
-    "First name field" should "get front type" in {
-      Teacher ? "first_name" should be(Some(Teacher.first_name))
-    }
-  
-    it should "get value from Map" in {
-      def student = new MapValues(HashMap(
-        "first_name" -> "Sinh",
-        "age" -> "18"
-      ))
-  
-      import Student._
-      student ~> first_name should be(Some("Sinh"))
-      student ~> last_name should be(None)
-      student ~> age should be(Some(18))
-      student demand first_name should be("Sinh")
-    }
-  
-  }
 
 ```
 
+## An opportunity to generate code
+
+There are many duplicate code in idea level in any source code. Let think about dto class (`case class`) and
+Data Access Layer class (example table config in [Slick](http://slick.lightbend.com/doc/3.0.0/gettingstarted.html)). Why we have to tell that an Student entity has
+firstName 2 times, one in `case class`, and another one in `Table Config`
+
+Suppose that you want to build [GraphQL application](https://github.com/sangria-graphql/sangria), then you have to config graphQL configuration again.
+
+All of these thing are duplicate in idea level. We have to write these configuration code again and again. It 
+kill productivity of us. Then, we can build and global config language (we can named it domain language) and then generate all 
+another configuration

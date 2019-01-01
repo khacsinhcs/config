@@ -25,7 +25,7 @@ class HasValuesTest extends FlatSpec with Matchers {
 
     the [IllegalStateException] thrownBy {
       student demand last_name
-    } should have message "Field(last_name, Last name) is demand"
+    } should have message "Field(name: \"last_name\", label: \"Last name\", required: true) is demand"
   }
 
   it should "to string has value" in {

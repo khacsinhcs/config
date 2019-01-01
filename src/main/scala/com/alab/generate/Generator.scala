@@ -11,13 +11,15 @@ abstract class Generator(config: Config) {
   def name: String
 
   def write: Unit = {
-    val writer = new PrintWriter(new File(config.path + "/" + name))
+    val file = new File(config.path + "/" + name)
+    if (!file.exists) file.createNewFile
+    val writer = new PrintWriter(file)
     writer.write(generate)
     writer.close()
   }
 }
 
-object CaseClassGenerator extends Generator(Config("../scala-2.12/src_managed")) {
+object CaseClassGenerator extends Generator(Config("/Users/khacsinhcs/workplace/self/config/target/scala-2.12/src_managed")) {
   override def generate: String = {
     "package model.app" + "\n" + TypeSystem.types.values.map(t => generate(t)).mkString("\n")
   }
@@ -41,5 +43,5 @@ object CaseClassGenerator extends Generator(Config("../scala-2.12/src_managed"))
     "case class " + t.name + "(" + params(t.fields) + ")"
   }
 
-  override def name: String = "module"
+  override def name: String = "module/App.scala"
 }

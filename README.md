@@ -1,6 +1,7 @@
 # CONFIGURATION LANGUAGE AGAIN?
 
-Many project start configuration by Json, Annotation or Xml. But all these data kind is not code
+## Why?
+Many projects configure by Json, Annotation or Xml. But all these data kind is not code
 Then we can't handle many hard case in there.
 
 Scala is a extendable language. It should be the best suitable for configuration language.
@@ -55,12 +56,12 @@ Example, we want config domain object like:
 
 ## An opportunity to generate code
 
-There are many duplicate code in idea level in any source code. Let think about dto class (`case class`) and
+There are many duplicate code in concept level. Let think about dto class (`case class`) and
 Data Access Layer class (example table config in [Slick](http://slick.lightbend.com/doc/3.0.0/gettingstarted.html)). Why we have to tell that an Student entity has
 firstName 2 times, one in `case class`, and another one in `Table Config`
 
 Suppose that you want to build [GraphQL application](https://github.com/sangria-graphql/sangria), then you have to config graphQL configuration again.
 
 All of these thing are duplicate in idea level. We have to write these configuration code again and again. It 
-kill productivity of us. Then, we can build and global config language (we can named it domain language) and then generate all 
-another configuration
+kill our productivity. Why don't we write global config language (we can named it domain language) and then generate all 
+another configuration?

@@ -12,11 +12,13 @@ class CaseClassTest extends FlatSpec with Matchers {
     CaseClassGenerator.generate(Student)
     val caseStudent = CaseClassGenerator.generate(Student)
     println(caseStudent)
-    caseStudent should startWith ("case class Student(")
+    caseStudent should be ("case class Student(id: Option[Int], firstName: String, lastName: String, phone: Option[String], age: Int, teacher: String)")
   }
 
   it should "generate all types" in {
     val caseClasses = CaseClassGenerator.generate
     println(caseClasses)
+    caseClasses should include ("Student")
+    caseClasses should include ("Teacher")
   }
 }

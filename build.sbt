@@ -12,11 +12,12 @@ libraryDependencies += "org.scalactic" %% "scalactic" % "3.0.5"
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % "test"
 
 
-val scalaVersionTest = taskKey[Unit]("The version of Scala used for building.")
-
-lazy val library = (project in file("library"))
-  .settings(
-    scalaVersionTest := {
-      println("FuckU")
-    }
+lazy val root = (project in file(".")).
+  settings(
+    name := "config",
+    version := "0.0.1",
+    organization := "com.alab",
+    scalaVersion := "2.10.6",
+    sbtPlugin := true,
+    sbtVersion := "1.2.4"
   )

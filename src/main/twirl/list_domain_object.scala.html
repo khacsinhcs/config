@@ -1,0 +1,10 @@
+@import com.alab.conf.Type
+@(types: Iterable[Type])
+
+<h1>Welcome App!</h1>
+
+<ul>
+@for(t <- types) {
+	<li>t.name</li>
+}
+</ul>

@@ -3,7 +3,7 @@ package com.alab.generate
 import java.io.File
 import java.io.PrintWriter
 
-import com.alab.conf.{Field, Type, TypeSystem}
+import com.alab.conf._
 
 abstract class Generator(config: Config) {
   def generate: String
@@ -30,12 +30,19 @@ object CaseClassGenerator extends Generator(Config("/Users/khacsinhcs/workplace/
       scalaName.charAt(0).toLower + scalaName.substring(1)
     }
 
+
     def params(fields: Iterable[Field[_]]): String = {
       fields.map(f => {
-        normalizeName(f.name) + ": " + (f.required match {
-          case true => f.dataType.typeToString
-          case false => "Option[" + f.dataType.typeToString + "]"
-        })
+        val `type` = f.dataType match {
+          case StringType => "String"
+          case PhoneType => "String"
+          case StringKey => "String"
+          case NumberType => "Double"
+          case IntType => "Int"
+          case IdKey => "Int"
+        }
+        val dataType = if (f.required) `type` else "Option[" + `type` + "]"
+        normalizeName(f.name) + ": " + dataType
       }).mkString(", ")
     }
 

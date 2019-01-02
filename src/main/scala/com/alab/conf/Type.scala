@@ -58,7 +58,6 @@ trait DataType[T] {
 
   def validate(value: T): Option[String]
 
-  def typeToString : String
 }
 
 trait StringType extends DataType[String] {
@@ -66,7 +65,6 @@ trait StringType extends DataType[String] {
 
   override def fromString(str: String): String = str
 
-  override def typeToString: String = "String"
 }
 
 object StringType extends StringType {
@@ -122,7 +120,7 @@ object StringKey extends StringType {
   }
 }
 
-class NumberType extends DataType[Double]{
+object NumberType extends DataType[Double]{
   override def toString(t: Double): String = String.valueOf(t)
 
   override def fromString(str: String): Double = str.toDouble
@@ -131,7 +129,6 @@ class NumberType extends DataType[Double]{
 
   override def validate(value: Double): Option[String] = None
 
-  override def typeToString: String = "Double"
 }
 
 class IntegerType extends DataType[Int] {
@@ -143,7 +140,6 @@ class IntegerType extends DataType[Int] {
 
   override def validate(value: Int): Option[String] = None
 
-  override def typeToString: String = "Int"
 }
 
 object IntType extends IntegerType

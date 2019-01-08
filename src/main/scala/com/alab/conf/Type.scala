@@ -6,7 +6,7 @@ trait HasType {
 
   def f[T](field: Field[T]): Field[T]
 
-  def f[T](name: String, label: String, required: Boolean, dataType: DataType[T]): Field[T] = f[T](new Field[T](name, label, required, dataType))
+  def f[T](name: String, label: String, required: Boolean, dataType: DataType[T]): Field[T] = f[T](NormalField[T](name, label, required, dataType))
 
   def f[T](name: String, label: String, dataType: DataType[T]): Field[T] = f[T](name, label, required = true, dataType)
 
@@ -42,7 +42,7 @@ class Type(val name: String, description: String) extends HasType {
     fk
   }
 
-  def fields : Iterable[Field[_]] = {
+  def fields: Iterable[Field[_]] = {
     mapFields.values
   }
 
@@ -120,7 +120,7 @@ object StringKey extends StringType {
   }
 }
 
-object NumberType extends DataType[Double]{
+object NumberType extends DataType[Double] {
   override def toString(t: Double): String = String.valueOf(t)
 
   override def fromString(str: String): Double = str.toDouble
@@ -143,4 +143,5 @@ class IntegerType extends DataType[Int] {
 }
 
 object IntType extends IntegerType
+
 object IdKey extends IntegerType

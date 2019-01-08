@@ -1,6 +1,6 @@
 package com.alab.conf
 
-import com.alab.model.Student
+import com.alab.model.{Student, Teacher}
 import com.alab.model.{HasValues, MapValues}
 import org.scalatest.{FlatSpec, Matchers}
 
@@ -33,5 +33,11 @@ class HasValuesTest extends FlatSpec with Matchers {
     val str = student toString Student
     println(str)
     str should include ("Student")
+  }
+
+  "Field path" should "have a correct name" in {
+    val field = Student.teacher.dot(mergeLabels = false,Teacher.first_name)
+    field.name should include ("$teacher.first_name")
+    field.label should include ("First name")
   }
 }

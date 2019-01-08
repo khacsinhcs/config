@@ -1,25 +1,41 @@
 package com.alab.conf
 
-class Field[T](val name: String, val label: String, val required: Boolean, val dataType: DataType[T]) {
-  override def toString: String = s"""Field(name: "$name", label: "$label", required: $required)"""
+trait Field[T] {
+  def name: String
+
+  def label: String
+
+  def required: Boolean
+
+  def dataType: DataType[T]
 }
+
+case class NormalField[T](name: String, label: String, required: Boolean, dataType: DataType[T]) extends Field[T]
 
 /**
   * Foreign key
   */
-class FK[T](override val name: String,
-            override val label: String,
-            override val required: Boolean,
-            override val dataType: DataType[T],
-            val ref: Type)
-  extends Field[T](name, label, required, dataType)
+case class FK[T](name: String, label: String, required: Boolean, dataType: DataType[T], ref: Type) extends Field[T] {
+  def dot[FieldType](mergeLabels: Boolean, field: Field[FieldType]): Field[FieldType] = FieldPath(mergeLabels, Array(this), field)
 
+  def dot[FieldType](field: Field[FieldType]) : Field[FieldType] = dot(mergeLabels = true, field)
+}
 
-class FieldPath[T](
-                   override val required: Boolean,
-                   override val dataType: DataType[T], fks: FK[_])
-  extends Field[T]("", "", required, dataType) {
-  override val name: String = {
-    ""
+case class FieldPath[T](mergeLabels: Boolean, paths: Array[FK[_]], leaf: Field[T])
+  extends Field[T] {
+  override val label: String = if (mergeLabels) paths.apply(paths.length - 1).label else leaf.label
+
+  private lazy val _name = paths.map(f => "$" + f.name).mkString("", ".", ".") + leaf.name
+
+  override def name: String = _name
+
+  override def required: Boolean = leaf.required
+
+  override def dataType: DataType[T] = leaf.dataType
+
+  def dot[FT](field: Field[FT]): Field[FT] = {
+    leaf match {
+      case f: FK[T] => FieldPath(mergeLabels, paths :+ f, field)
+    }
   }
 }

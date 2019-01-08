@@ -44,9 +44,7 @@ class Type(val n: String, des: String) extends HasType {
     fk
   }
 
-  def fields: Iterable[Field[_]] = {
-    mapFields.values
-  }
+  def fields: Iterable[Field[_]] = mapFields.values
 
 }
 
@@ -81,14 +79,13 @@ object EmailType extends StringType {
 
   private val regex: Regex = """^[a-zA-Z0-9\.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$""".r
 
-  override def validate(value: String): Option[String] = {
+  override def validate(value: String): Option[String] =
     value match {
       case null => Some("Email can't null")
       case mail if mail.trim.isEmpty => Some("Empty email")
       case mail if regex.findFirstIn(mail).isDefined => None
       case _ => Some("Wrong email format")
     }
-  }
 
   override def display(value: String, format: String): String = value
 }
@@ -113,13 +110,12 @@ object PhoneType extends StringType {
 object StringKey extends StringType {
   override def display(value: String, format: String): String = value
 
-  override def validate(value: String): Option[String] = {
+  override def validate(value: String): Option[String] =
     value match {
       case null => Some("Key can't null")
       case someString if someString.trim == "" => Some("Don't allow empty")
       case _ => None
     }
-  }
 }
 
 object NumberType extends DataType[Double] {

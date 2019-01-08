@@ -7,34 +7,31 @@ trait HasValues {
 
   def ~>[T](field: Field[T]): Option[T] = _get(field)
 
-  def demand[T](field: Field[T]): T = {
+  def demand[T](field: Field[T]): T =
     this ~> field match {
       case Some(t) => t
       case None => throw new IllegalStateException(s"$field is demand")
     }
-  }
 
-  def get[T](field: Field[T], t: T): T = {
+  def get[T](field: Field[T], t: T): T =
     this ~> field match {
       case Some(value) => value
       case None => t
     }
-  }
 
-  def toString(t: Type): String = {
+  def toString(t: Type): String =
     t.fields.flatMap(f => {
       _get(f) match {
         case None => None
         case Some(v) => Some(f.name + ": " + v.toString)
       }
     }).mkString(t.n + "(", ", ", ")")
-  }
 }
 
 
 class MapValues(private val values: Map[String, _]) extends HasValues {
 
-  override protected def _get[FieldType](field: Field[FieldType]): Option[FieldType] = {
+  override protected def _get[FieldType](field: Field[FieldType]): Option[FieldType] =
     field match {
       case f: NormalField[FieldType] => getFromMap(f.name, f.dataType)
       case fk: FK[FieldType] => getFromMap(fk.name, fk.dataType)
@@ -46,14 +43,11 @@ class MapValues(private val values: Map[String, _]) extends HasValues {
       }
     }
 
-  }
-
-  def getFromMap[FieldType](key: String, dataType: DataType[FieldType]): Option[FieldType] = {
+  def getFromMap[FieldType](key: String, dataType: DataType[FieldType]): Option[FieldType] =
     values.get(key) match {
       case None => None
       case Some(t: FieldType) => Some(t)
       case Some(str: String) => Some(dataType.fromString(str))
     }
-  }
 
 }

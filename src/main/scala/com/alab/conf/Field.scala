@@ -38,4 +38,6 @@ case class FieldPath[T](mergeLabels: Boolean, paths: Array[FK[_]], leaf: Field[T
       case f: FK[T] => FieldPath(mergeLabels, paths :+ f, field)
     }
   }
+
+  def child: Field[T] = if (paths.length == 1) leaf else FieldPath(mergeLabels, paths.tail, leaf)
 }

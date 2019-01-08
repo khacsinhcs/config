@@ -1,8 +1,8 @@
-package com.alab
+package com.alab.model
 
 import com.alab.conf._
 
-package object model {
+package object App {
 
   trait HasName extends HasType {
     val first_name: Field[String] = f("first_name", "First name", StringType)

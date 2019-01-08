@@ -1,7 +1,7 @@
 package com.alab.conf
 
 import com.alab.generate.CaseClassGenerator
-import com.alab.model._
+import com.alab.model.App._
 import org.scalatest.{FlatSpec, Matchers}
 
 class CaseClassTest extends FlatSpec with Matchers {

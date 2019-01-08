@@ -35,11 +35,15 @@ trait HasValues {
 class MapValues(private val values: Map[String, _]) extends HasValues {
 
   override protected def _get[FieldType](field: Field[FieldType]): Option[FieldType] = {
-
     field match {
       case f: NormalField[FieldType] => getFromMap(f.name, f.dataType)
       case fk: FK[FieldType] => getFromMap(fk.name, fk.dataType)
-      case fp: FieldPath[FieldType] => ???
+      case fp: FieldPath[FieldType] => {
+        getFromMap(fp.name, fp.dataType) match {
+          case Some(t) => Some(t)
+          case None => _get(fp.child)
+        }
+      }
     }
 
   }
@@ -47,8 +51,9 @@ class MapValues(private val values: Map[String, _]) extends HasValues {
   def getFromMap[FieldType](key: String, dataType: DataType[FieldType]): Option[FieldType] = {
     values.get(key) match {
       case None => None
+      case Some(t: FieldType) => Some(t)
       case Some(str: String) => Some(dataType.fromString(str))
-      case Some(_: FieldType) =>
     }
   }
+
 }

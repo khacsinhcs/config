@@ -1,5 +1,7 @@
 package com.alab.conf
 
+import com.alab.model.HasValues
+
 trait HasType {
 
   def ?(name: String): Option[Field[_]]
@@ -145,3 +147,13 @@ class IntegerType extends DataType[Int] {
 object IntType extends IntegerType
 
 object IdKey extends IntegerType
+
+class HasValuesType extends DataType[HasValues] {
+  override def toString(t: HasValues): String = ""
+
+  override def fromString(str: String): HasValues = ???
+
+  override def display(value: HasValues, format: String): String = ???
+
+  override def validate(value: HasValues): Option[String] = ???
+}

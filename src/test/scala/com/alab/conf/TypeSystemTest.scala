@@ -1,7 +1,7 @@
 package com.alab.conf
 
 import org.scalatest.{FlatSpec, Matchers}
-import com.alab.model.{Bootstrap, Teacher}
+import com.alab.model.App.{Bootstrap, Teacher}
 
 class TypeSystemTest extends FlatSpec with Matchers {
   Bootstrap allTypes()

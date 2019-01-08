@@ -29,7 +29,7 @@ package object model {
   }
 
   object Faculty extends Type(n = "Faculty", des = "The teaching staff of a university or college, or of one of its departments or divisions, viewed as a body.") with HasId {
-    val name: Field[String] = f("name", StringType)
+    val name: Field[String] = f("name", "Name", StringType)
   }
 
   object Teacher extends Type(n = "Teacher", des = "He teach student") with HasKeyName with HasContactInfo {

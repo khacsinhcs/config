@@ -8,12 +8,13 @@ import scala.collection.immutable.HashMap
 
 class HasValuesTest extends FlatSpec with Matchers {
 
-  def initStudent : HasValues = {
+  def initStudent: HasValues = {
     new MapValues(HashMap(
       "first_name" -> "Sinh",
       "age" -> "18"
     ))
   }
+
   it should "get value from Map" in {
     val student = initStudent
 
@@ -23,7 +24,7 @@ class HasValuesTest extends FlatSpec with Matchers {
     student ~> age should be(Some(18))
     student demand first_name should be("Sinh")
 
-    the [IllegalStateException] thrownBy {
+    the[IllegalStateException] thrownBy {
       student demand last_name
     } should have message "Field(name: \"last_name\", label: \"Last name\", required: true) is demand"
   }
@@ -32,12 +33,12 @@ class HasValuesTest extends FlatSpec with Matchers {
     val student = initStudent
     val str = student toString Student
     println(str)
-    str should include ("Student")
+    str should include("Student")
   }
 
   "Field path" should "have a correct name" in {
-    val field = Student.teacher.dot(mergeLabels = false,Teacher.first_name)
-    field.name should include ("$teacher.first_name")
-    field.label should include ("First name")
+    val field = Student.teacher / Teacher.first_name
+    field.name should include("$teacher.first_name")
+    field.label should include("First name")
   }
 }

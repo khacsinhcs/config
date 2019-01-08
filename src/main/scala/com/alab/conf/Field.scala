@@ -18,7 +18,7 @@ case class NormalField[T](name: String, label: String, required: Boolean, dataTy
 case class FK[T](name: String, label: String, required: Boolean, dataType: DataType[T], ref: Type) extends Field[T] {
   def dot[FieldType](mergeLabels: Boolean, field: Field[FieldType]): Field[FieldType] = FieldPath(mergeLabels, Array(this), field)
 
-  def dot[FieldType](field: Field[FieldType]) : Field[FieldType] = dot(mergeLabels = true, field)
+  def /[FieldType](field: Field[FieldType]) : Field[FieldType] = dot(mergeLabels = false, field)
 }
 
 case class FieldPath[T](mergeLabels: Boolean, paths: Array[FK[_]], leaf: Field[T])

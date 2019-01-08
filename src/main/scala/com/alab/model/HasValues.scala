@@ -46,8 +46,8 @@ class MapValues(private val values: Map[String, _]) extends HasValues {
   def getFromMap[FieldType](key: String, dataType: DataType[FieldType]): Option[FieldType] =
     values.get(key) match {
       case None => None
-      case Some(t: FieldType) => Some(t)
       case Some(str: String) => Some(dataType.fromString(str))
+      case Some(t: FieldType) => Some(t)
     }
 
 }

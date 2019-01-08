@@ -37,7 +37,7 @@ class HasValuesTest extends FlatSpec with Matchers {
   }
 
   "Field path" should "have a correct name" in {
-    val field = Student.teacher / Teacher.faculty / Faculty.name
+    val field = Student.teacher > Teacher.faculty > Faculty.name
     field.name should include("$teacher.$faculty.name")
     field.label should include("Name")
   }

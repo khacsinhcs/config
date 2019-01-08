@@ -18,7 +18,7 @@ case class NormalField[T](name: String, label: String, required: Boolean, dataTy
 case class FK[T](name: String, label: String, required: Boolean, dataType: DataType[T], ref: Type) extends Field[T] {
   def dot[FieldType](mergeLabels: Boolean, field: Field[FieldType]): FieldPath[FieldType] = FieldPath(mergeLabels, Array(this), field)
 
-  def /[FieldType](field: Field[FieldType]) : FieldPath[FieldType] = dot(mergeLabels = false, field)
+  def >[FieldType](field: Field[FieldType]) : FieldPath[FieldType] = dot(mergeLabels = false, field)
 }
 
 case class FieldPath[T](mergeLabels: Boolean, paths: Array[FK[_]], leaf: Field[T])
@@ -33,7 +33,7 @@ case class FieldPath[T](mergeLabels: Boolean, paths: Array[FK[_]], leaf: Field[T
 
   override def dataType: DataType[T] = leaf.dataType
 
-  def /[FT](field: Field[FT]): FieldPath[FT] = {
+  def >[FT](field: Field[FT]): FieldPath[FT] = {
     leaf match {
       case f: FK[T] => FieldPath(mergeLabels, paths :+ f, field)
     }

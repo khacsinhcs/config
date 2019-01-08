@@ -1,6 +1,6 @@
 package com.alab.model
 
-import com.alab.conf.{Field, Type}
+import com.alab.conf._
 
 trait HasValues {
   protected def _get[T](field: Field[T]): Option[T]
@@ -32,13 +32,23 @@ trait HasValues {
 }
 
 
-class MapValues(values: Map[String, _]) extends HasValues {
+class MapValues(private val values: Map[String, _]) extends HasValues {
 
   override protected def _get[FieldType](field: Field[FieldType]): Option[FieldType] = {
-    values.get(field.name) match {
+
+    field match {
+      case f: NormalField[FieldType] => getFromMap(f.name, f.dataType)
+      case fk: FK[FieldType] => getFromMap(fk.name, fk.dataType)
+      case fp: FieldPath[FieldType] => ???
+    }
+
+  }
+
+  def getFromMap[FieldType](key: String, dataType: DataType[FieldType]): Option[FieldType] = {
+    values.get(key) match {
       case None => None
-      case Some(str: String) => Some(field.dataType.fromString(str))
-      case Some(t) => Some(t.asInstanceOf[FieldType])
+      case Some(str: String) => Some(dataType.fromString(str))
+      case Some(_: FieldType) =>
     }
   }
 }

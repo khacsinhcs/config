@@ -21,7 +21,7 @@ trait HasType {
   def fk[T](name: String, dataType: DataType[T], kind: Type): FK[T] = fk[T](name, name, dataType, kind)
 }
 
-class Type(val name: String, description: String) extends HasType {
+class Type(val n: String, des: String) extends HasType {
 
   import scala.collection.mutable
 

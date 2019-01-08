@@ -27,7 +27,7 @@ trait HasValues {
         case None => None
         case Some(v) => Some(f.name + ": " + v.toString)
       }
-    }).mkString(t.name + "(", ", ", ")")
+    }).mkString(t.n + "(", ", ", ")")
   }
 }
 

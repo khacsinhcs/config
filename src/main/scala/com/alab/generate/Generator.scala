@@ -36,7 +36,7 @@ object CaseClassGenerator extends Generator {
     }
 
 
-    "case class " + t.name + "(" + params(t.fields) + ")"
+    "case class " + t.n + "(" + params(t.fields) + ")"
   }
 
   override def name: String = "module/App.scala"

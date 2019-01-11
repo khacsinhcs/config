@@ -1,6 +1,6 @@
 package com.alab.conf
 
-trait Field[T] {
+trait Field[T] extends Immutable{
   def name: String
 
   def label: String
@@ -40,4 +40,8 @@ case class FieldPath[T](mergeLabels: Boolean, paths: Array[FK[_]], leaf: Field[T
   }
 
   def child: Field[T] = if (paths.length == 1) leaf else FieldPath(mergeLabels, paths.tail, leaf)
+
+  def head: FK[_] = paths.length match  {
+    case l if l > 0 => paths.head
+  }
 }

@@ -3,7 +3,7 @@ package com.alab.conf
 import com.alab.model.HasValues
 
 
-trait DataType[T] {
+trait DataType[T] extends Immutable {
   def toString(t: T): String
 
   def fromString(str: String): T

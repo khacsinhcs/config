@@ -5,16 +5,16 @@ import com.alab.conf._
 trait HasValues {
   protected def _get[T](field: Field[T]): Option[T]
 
-  def ~>[T](field: Field[T]): Option[T] = _get(field)
+  def ->[T](field: Field[T]): Option[T] = _get(field)
 
   def demand[T](field: Field[T]): T =
-    this ~> field match {
+    this -> field match {
       case Some(t) => t
       case None => throw new IllegalStateException(s"$field is demand")
     }
 
   def get[T](field: Field[T], t: T): T =
-    this ~> field match {
+    this -> field match {
       case Some(value) => value
       case None => t
     }

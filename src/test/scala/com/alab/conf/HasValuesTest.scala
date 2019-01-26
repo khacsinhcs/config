@@ -19,9 +19,9 @@ class HasValuesTest extends FlatSpec with Matchers {
     val student = initStudent
 
     import com.alab.model.App.Student._
-    student ~> first_name should be(Some("Sinh"))
-    student ~> last_name should be(None)
-    student ~> age should be(Some(18))
+    student -> first_name should be(Some("Sinh"))
+    student -> last_name should be(None)
+    student -> age should be(Some(18))
     student demand first_name should be("Sinh")
 
     the[IllegalStateException] thrownBy {
@@ -45,6 +45,6 @@ class HasValuesTest extends FlatSpec with Matchers {
   "Get FieldPath value" should "be work" in {
     val field = Student.teacher > Teacher.faculty > Faculty.name
     val student = initStudent
-    student ~> field should be (None)
+    student -> field should be (None)
   }
 }

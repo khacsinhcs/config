@@ -19,7 +19,6 @@ lazy val root = (project in file(".")).
     name := "config",
     version := "0.0.1",
     organization := "com.alab",
-    scalaVersion := "2.10.6",
-    sbtPlugin := true,
+    scalaVersion := "2.12.7",
     sbtVersion := "1.2.4"
   ).enablePlugins(SbtTwirl)

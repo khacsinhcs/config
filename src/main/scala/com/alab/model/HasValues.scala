@@ -1,7 +1,6 @@
 package com.alab.model
 
 import com.alab.conf._
-import play.api.libs.json._
 
 trait HasValues {
   protected def _get[T](field: Field[T]): Option[T]

@@ -2,8 +2,12 @@ package com.alab.conf
 
 import com.alab.model.HasValues
 
+import scala.reflect.ClassTag
+
 
 trait DataType[T] extends Immutable {
+  implicit val classTag: ClassTag[T]
+
   def toString(t: T): String
 
   def fromString(str: String): T
@@ -18,6 +22,8 @@ trait StringType extends DataType[String] {
   override def toString(t: String): String = t
 
   override def fromString(str: String): String = str
+
+  override implicit val classTag: ClassTag[String] = implicitly[ClassTag[String]]
 
 }
 
@@ -73,6 +79,9 @@ object StringKey extends StringType {
 }
 
 object NumberType extends DataType[Double] {
+  override implicit val classTag: ClassTag[Double] = implicitly[ClassTag[Double]]
+
+
   override def toString(t: Double): String = String.valueOf(t)
 
   override def fromString(str: String): Double = str.toDouble
@@ -84,6 +93,8 @@ object NumberType extends DataType[Double] {
 }
 
 class IntegerType extends DataType[Int] {
+  override implicit val classTag: ClassTag[Int] = implicitly[ClassTag[Int]]
+
   override def toString(t: Int): String = String.valueOf(t)
 
   override def fromString(str: String): Int = str.toInt
@@ -99,6 +110,8 @@ object IntType extends IntegerType
 object IdKey extends IntegerType
 
 class HasValuesType extends DataType[HasValues] {
+  override implicit val classTag: ClassTag[HasValues] = implicitly[ClassTag[HasValues]]
+
   override def toString(t: HasValues): String = ""
 
   override def fromString(str: String): HasValues = ???

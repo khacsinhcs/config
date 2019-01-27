@@ -3,6 +3,7 @@ package com.alab.model
 import com.alab.conf._
 
 trait HasValues {
+  self =>
   protected def _get[T](field: Field[T]): Option[T]
 
   def ->[T](field: Field[T]): Option[T] = _get(field)
@@ -26,9 +27,16 @@ trait HasValues {
         case Some(v) => Some(f.name + ": " + v.toString)
       }
     }).mkString(t.n + "(", ", ", ")")
+
+  def + (that: HasValues): HasValues = new HasValues {
+    override protected def _get[T](field: Field[T]): Option[T] = self._get[T](field) match {
+      case None => that._get[T](field)
+      case Some(t: T) => Some(t)
+    }
+  }
 }
 
-class MapValues(private val values: Map[String, _]) extends HasValues {
+case class MapValues(private val values: Map[String, _]) extends HasValues {
 
   override protected def _get[FieldType](field: Field[FieldType]): Option[FieldType] =
     field match {
@@ -49,4 +57,8 @@ class MapValues(private val values: Map[String, _]) extends HasValues {
       case Some(t: FieldType) => Some(t)
     }
 
+}
+
+object EmptyValues extends HasValues {
+  override protected def _get[T](field: Field[T]): Option[T] = None
 }

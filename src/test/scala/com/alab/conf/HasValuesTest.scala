@@ -16,23 +16,6 @@ class HasValuesTest extends FlatSpec with Matchers {
     ))
   }
 
-  def createJsonValue: HasValues = {
-    new JsonValues(Json.obj("first_name" -> "Sinh", "age" -> 18))
-  }
-
-  "Should set value" should "hello" in {
-    val student = createJsonValue
-    import com.alab.model.App.Student._
-    student -> first_name should be(Some("Sinh"))
-    student -> last_name should be(None)
-    student -> age should be(Some(18))
-    student demand first_name should be("Sinh")
-
-    the[IllegalStateException] thrownBy {
-      student demand last_name
-    }
-  }
-
   "student hasValue" should "get value" in {
     val student = createMapValue
 

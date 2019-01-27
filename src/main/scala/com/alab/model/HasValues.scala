@@ -29,18 +29,6 @@ trait HasValues {
     }).mkString(t.n + "(", ", ", ")")
 }
 
-class JsonValues(private val value: JsValue) extends HasValues {
-  override protected def _get[T](field: Field[T]): Option[T] = {
-    val data = value \ field.name
-    data toOption match  {
-      case Some(jsString: JsString) => Some(field.dataType.fromString(jsString.value))
-      case Some(jsValue: JsValue) =>
-        Some(field.dataType.fromString(jsValue.toString()))
-      case None => None
-    }
-  }
-}
-
 class MapValues(private val values: Map[String, _]) extends HasValues {
 
   override protected def _get[FieldType](field: Field[FieldType]): Option[FieldType] =

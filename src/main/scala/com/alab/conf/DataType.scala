@@ -1,6 +1,6 @@
 package com.alab.conf
 
-import com.alab.conf.NumberType.fromString
+import com.alab.conf.validate.{Validate, ValidateFail, ValidateSuccess}
 import com.alab.model.{HasValues, MapValues}
 
 import scala.reflect.ClassTag
@@ -15,7 +15,7 @@ trait DataType[T] extends Immutable {
 
   def display(value: T, format: String): String
 
-  def validate(value: T): Option[String]
+  def validate(value: T): Validate
 
   def getOption(values: HasValues, name: String): Option[T]
 }
@@ -36,7 +36,7 @@ trait StringType extends DataType[String] {
 object StringType extends StringType {
   override def display(value: String, format: String): String = value
 
-  override def validate(value: String): Option[String] = None
+  override def validate(value: String): Validate = ValidateSuccess()
 }
 
 object EmailType extends StringType {
@@ -45,12 +45,12 @@ object EmailType extends StringType {
 
   private val regex: Regex = """^[a-zA-Z0-9\.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$""".r
 
-  override def validate(value: String): Option[String] =
+  override def validate(value: String): Validate =
     value match {
-      case null => Some("Email can't null")
-      case mail if mail.trim.isEmpty => Some("Empty email")
-      case mail if regex.findFirstIn(mail).isDefined => None
-      case _ => Some("Wrong email format")
+      case null => ValidateFail("Email can't null")
+      case mail if mail.trim.isEmpty => ValidateFail("Empty email")
+      case mail if regex.findFirstIn(mail).isDefined => ValidateSuccess()
+      case _ => ValidateFail("Wrong email format")
     }
 
   override def display(value: String, format: String): String = value
@@ -64,7 +64,7 @@ object PhoneType extends StringType {
 
   override def display(value: String, format: String): String = ???
 
-  override def validate(value: String): Option[String] = ???
+  override def validate(value: String): Validate = ValidateSuccess()
 
   override def fromString(str: String): String = {
     str match {
@@ -76,11 +76,11 @@ object PhoneType extends StringType {
 object StringKey extends StringType {
   override def display(value: String, format: String): String = value
 
-  override def validate(value: String): Option[String] =
+  override def validate(value: String): Validate =
     value match {
-      case null => Some("Key can't null")
-      case someString if someString.trim == "" => Some("Don't allow empty")
-      case _ => None
+      case null => ValidateFail("Key can't null")
+      case someString if someString.trim == "" => ValidateFail("Don't allow empty")
+      case _ => ValidateSuccess()
     }
 }
 
@@ -102,7 +102,7 @@ object NumberType extends DataType[Double] {
 
   override def display(value: Double, format: String): String = toString(value)
 
-  override def validate(value: Double): Option[String] = None
+  override def validate(value: Double): Validate = ValidateSuccess()
 
 }
 
@@ -123,7 +123,7 @@ class IntegerType extends DataType[Int] {
 
   override def display(value: Int, format: String): String = toString()
 
-  override def validate(value: Int): Option[String] = None
+  override def validate(value: Int): Validate = ValidateSuccess()
 
 }
 
@@ -147,5 +147,5 @@ object HasValuesType extends DataType[HasValues] {
 
   override def display(value: HasValues, format: String): String = ???
 
-  override def validate(value: HasValues): Option[String] = ???
+  override def validate(value: HasValues): Validate = ValidateSuccess()
 }

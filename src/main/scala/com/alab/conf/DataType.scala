@@ -1,6 +1,7 @@
 package com.alab.conf
 
-import com.alab.model.HasValues
+import com.alab.conf.NumberType.fromString
+import com.alab.model.{HasValues, MapValues}
 
 import scala.reflect.ClassTag
 
@@ -16,6 +17,7 @@ trait DataType[T] extends Immutable {
 
   def validate(value: T): Option[String]
 
+  def getOption(values: HasValues, name: String): Option[T]
 }
 
 trait StringType extends DataType[String] {
@@ -25,6 +27,10 @@ trait StringType extends DataType[String] {
 
   override implicit val classTag: ClassTag[String] = implicitly[ClassTag[String]]
 
+  override def getOption(values: HasValues, name: String): Option[String] = values.getRaw(name) match {
+    case Some(s: String) => Some(s)
+    case _ => None
+  }
 }
 
 object StringType extends StringType {
@@ -82,6 +88,14 @@ object NumberType extends DataType[Double] {
   override implicit val classTag: ClassTag[Double] = implicitly[ClassTag[Double]]
 
 
+  override def getOption(values: HasValues, name: String): Option[Double] = values.getRaw(name) match {
+    case Some(d: Double) => Some(d)
+    case Some(s: String) => Some(fromString(s))
+    case Some(d: Int) => Some(d)
+    case Some(f: Float) => Some(f.toDouble)
+    case _ => None
+  }
+
   override def toString(t: Double): String = String.valueOf(t)
 
   override def fromString(str: String): Double = str.toDouble
@@ -93,6 +107,14 @@ object NumberType extends DataType[Double] {
 }
 
 class IntegerType extends DataType[Int] {
+  override def getOption(values: HasValues, name: String): Option[Int] = values.getRaw(name) match {
+    case Some(d: Double) => Some(d.intValue())
+    case Some(s: String) => Some(fromString(s))
+    case Some(d: Int) => Some(d)
+    case Some(f: Float) => Some(f.toInt)
+    case _ => None
+  }
+
   override implicit val classTag: ClassTag[Int] = implicitly[ClassTag[Int]]
 
   override def toString(t: Int): String = String.valueOf(t)
@@ -109,8 +131,15 @@ object IntType extends IntegerType
 
 object IdKey extends IntegerType
 
-class HasValuesType extends DataType[HasValues] {
+object HasValuesType extends DataType[HasValues] {
   override implicit val classTag: ClassTag[HasValues] = implicitly[ClassTag[HasValues]]
+
+  override def getOption(values: HasValues, name: String): Option[HasValues] = values.getRaw(name) match {
+    case Some(hasValue: HasValues) => Some(hasValue)
+    case Some(s: String) => Some(fromString(s))
+    case Some(map: Map[String, _]) => Some(MapValues(map))
+    case _ => None
+  }
 
   override def toString(t: HasValues): String = ""
 

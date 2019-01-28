@@ -1,9 +1,8 @@
 package com.alab.conf
 
 import com.alab.model.App.{Student, _}
-import com.alab.model.{HasValues, JsonValues, MapValues}
+import com.alab.model.{HasValues, MapValues}
 import org.scalatest.{FlatSpec, Matchers}
-import play.api.libs.json.Json
 
 import scala.collection.immutable.HashMap
 
@@ -12,7 +11,8 @@ class HasValuesTest extends FlatSpec with Matchers {
   def createMapValue: HasValues = {
     new MapValues(HashMap(
       "first_name" -> "Sinh",
-      "age" -> "18"
+      "age" -> "18",
+      "teacher" -> HashMap("name" -> "Oanh")
     ))
   }
 
@@ -24,7 +24,7 @@ class HasValuesTest extends FlatSpec with Matchers {
     student -> last_name should be(None)
     student -> age should be(Some(18))
     student demand first_name should be("Sinh")
-
+    student -> (teacher > first_name) should be("Oanh")
     the[IllegalStateException] thrownBy {
       student demand last_name
     }

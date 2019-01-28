@@ -8,4 +8,6 @@ object validate {
 
   case class ValidateFail(reason: String) extends Validate()
 
+
+  abstract class Validator[T](t: T) extends (T => Validate)
 }

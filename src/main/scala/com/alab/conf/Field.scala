@@ -1,6 +1,12 @@
 package com.alab.conf
 
-trait Field[T] extends Immutable{
+import com.alab.conf.validate.{Validate, ValidateFail, ValidateSuccess, Validator}
+
+trait Field[T] extends Immutable {
+  self =>
+
+  private var validators: List[Validator[T]] = List[Validator[T]]()
+
   def name: String
 
   def label: String
@@ -8,6 +14,17 @@ trait Field[T] extends Immutable{
   def required: Boolean
 
   def dataType: DataType[T]
+
+  def is(v: Validator[T]): Field[T] = {
+    validators = validators :+ v
+    self
+  }
+
+  def validate(t: T): List[String] =
+    validators.map(validate => validate.apply(t)).flatMap({
+      case ValidateSuccess() => List()
+      case ValidateFail(s) => List(s)
+    })
 }
 
 case class NormalField[T](name: String, label: String, required: Boolean, dataType: DataType[T]) extends Field[T]
@@ -18,7 +35,7 @@ case class NormalField[T](name: String, label: String, required: Boolean, dataTy
 case class FK[T](name: String, label: String, required: Boolean, dataType: DataType[T], ref: Type) extends Field[T] {
   def dot[FieldType](mergeLabels: Boolean, field: Field[FieldType]): FieldPath[FieldType] = FieldPath(mergeLabels, Array(this), field)
 
-  def /[FieldType](field: Field[FieldType]) : FieldPath[FieldType] = dot(mergeLabels = false, field)
+  def /[FieldType](field: Field[FieldType]): FieldPath[FieldType] = dot(mergeLabels = false, field)
 }
 
 case class FieldPath[T](mergeLabels: Boolean, paths: Array[FK[_]], leaf: Field[T])
@@ -41,7 +58,7 @@ case class FieldPath[T](mergeLabels: Boolean, paths: Array[FK[_]], leaf: Field[T
 
   def child: Field[T] = if (paths.length == 1) leaf else FieldPath(mergeLabels, paths.tail, leaf)
 
-  def head: FK[_] = paths.length match  {
+  def head: FK[_] = paths.length match {
     case l if l > 0 => paths.head
   }
 }

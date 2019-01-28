@@ -24,7 +24,7 @@ class HasValuesTest extends FlatSpec with Matchers {
     student -> last_name should be(None)
     student -> age should be(Some(18))
     student demand first_name should be("Sinh")
-    student -> (teacher > first_name) should be(Some("Oanh"))
+    student -> (teacher / first_name) should be(Some("Oanh"))
     the[IllegalStateException] thrownBy {
       student demand last_name
     }
@@ -38,13 +38,13 @@ class HasValuesTest extends FlatSpec with Matchers {
   }
 
   "Field path" should "have a correct name" in {
-    val field = Student.teacher > Teacher.faculty > Faculty.name
+    val field = Student.teacher / Teacher.faculty / Faculty.name
     field.name should include("$teacher.$faculty.name")
     field.label should include("Name")
   }
 
   "Get FieldPath value" should "be work" in {
-    val field = Student.teacher > Teacher.faculty > Faculty.name
+    val field = Student.teacher / Teacher.faculty / Faculty.name
     val student = createMapValue
     student -> field should be(None)
   }

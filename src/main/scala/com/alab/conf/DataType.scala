@@ -15,7 +15,7 @@ trait DataType[T] extends Immutable {
 
   def display(value: T, format: String): String
 
-  def validate(value: T): Validate
+  def validate(value: T): Validate[String]
 
   def getOption(values: HasValues, name: String): Option[T]
 }
@@ -36,7 +36,7 @@ trait StringType extends DataType[String] {
 object StringType extends StringType {
   override def display(value: String, format: String): String = value
 
-  override def validate(value: String): Validate = ValidateSuccess()
+  override def validate(value: String): Validate[String] = ValidateSuccess()
 }
 
 object EmailType extends StringType {
@@ -45,7 +45,7 @@ object EmailType extends StringType {
 
   private val regex: Regex = """^[a-zA-Z0-9\.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$""".r
 
-  override def validate(value: String): Validate =
+  override def validate(value: String): Validate[String] =
     value match {
       case null => ValidateFail("Email can't null")
       case mail if mail.trim.isEmpty => ValidateFail("Empty email")
@@ -64,7 +64,7 @@ object PhoneType extends StringType {
 
   override def display(value: String, format: String): String = ???
 
-  override def validate(value: String): Validate = ValidateSuccess()
+  override def validate(value: String): Validate[String] = ValidateSuccess()
 
   override def fromString(str: String): String = {
     str match {
@@ -76,7 +76,7 @@ object PhoneType extends StringType {
 object StringKey extends StringType {
   override def display(value: String, format: String): String = value
 
-  override def validate(value: String): Validate =
+  override def validate(value: String): Validate[String] =
     value match {
       case null => ValidateFail("Key can't null")
       case someString if someString.trim == "" => ValidateFail("Don't allow empty")
@@ -102,7 +102,7 @@ object NumberType extends DataType[Double] {
 
   override def display(value: Double, format: String): String = toString(value)
 
-  override def validate(value: Double): Validate = ValidateSuccess()
+  override def validate(value: Double): Validate[String] = ValidateSuccess()
 
 }
 
@@ -123,7 +123,7 @@ class IntegerType extends DataType[Int] {
 
   override def display(value: Int, format: String): String = toString()
 
-  override def validate(value: Int): Validate = ValidateSuccess()
+  override def validate(value: Int): Validate[String] = ValidateSuccess()
 
 }
 
@@ -147,5 +147,5 @@ object HasValuesType extends DataType[HasValues] {
 
   override def display(value: HasValues, format: String): String = ???
 
-  override def validate(value: HasValues): Validate = ValidateSuccess()
+  override def validate(value: HasValues): Validate[String] = ValidateSuccess()
 }

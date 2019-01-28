@@ -1,11 +1,11 @@
 package com.alab.conf
 
-import com.alab.conf.validate.{Validate, ValidateFail, ValidateSuccess, Validator}
+import com.alab.conf.validate.{ValidateFail, ValidateSuccess, Validator}
 
 trait Field[T] extends Immutable {
   self =>
 
-  private var validators: List[Validator[T]] = List[Validator[T]]()
+  private var validators: List[Validator[T, String]] = List[Validator[T, String]]()
 
   def name: String
 
@@ -15,7 +15,7 @@ trait Field[T] extends Immutable {
 
   def dataType: DataType[T]
 
-  def is(v: Validator[T]): Field[T] = {
+  def is(v: Validator[T, String]): Field[T] = {
     validators = validators :+ v
     self
   }

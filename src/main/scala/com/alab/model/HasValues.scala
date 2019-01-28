@@ -1,5 +1,6 @@
 package com.alab.model
 
+import com.alab.conf.validate.Validate
 import com.alab.conf.{HasValuesType, _}
 
 trait HasValues {
@@ -38,6 +39,9 @@ trait HasValues {
       case None => t
     }
 
+  def validate(): Validate[String] = ???
+
+
   def toString(t: Type): String =
     t.fields.flatMap(f => {
       ->(f) match {
@@ -46,10 +50,12 @@ trait HasValues {
       }
     }).mkString(t.n + "(", ", ", ")")
 
+
   def +(that: HasValues): HasValues = (name: String) => self.getRaw(name) match {
     case Some(t) => Some(t)
     case None => that.getRaw(name)
   }
+
 }
 
 case class MapValues(private val values: Map[String, _]) extends HasValues {

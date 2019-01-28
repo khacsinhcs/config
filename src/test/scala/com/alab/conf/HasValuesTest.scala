@@ -9,10 +9,10 @@ import scala.collection.immutable.HashMap
 class HasValuesTest extends FlatSpec with Matchers {
 
   def createMapValue: HasValues = {
-    new MapValues(HashMap(
+     MapValues(HashMap(
       "first_name" -> "Sinh",
       "age" -> "18",
-      "teacher" -> HashMap("name" -> "Oanh")
+      "teacher" -> HashMap("first_name" -> "Oanh")
     ))
   }
 
@@ -24,7 +24,7 @@ class HasValuesTest extends FlatSpec with Matchers {
     student -> last_name should be(None)
     student -> age should be(Some(18))
     student demand first_name should be("Sinh")
-    student -> (teacher > first_name) should be("Oanh")
+    student -> (teacher > first_name) should be(Some("Oanh"))
     the[IllegalStateException] thrownBy {
       student demand last_name
     }

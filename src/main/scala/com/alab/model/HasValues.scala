@@ -9,9 +9,9 @@ trait HasValues {
 
     field match {
       case fp: FieldPath[T] =>
-        field.dataType.getOption(self, field.name) match {
+        getOption(fp.name, fp.dataType) match {
           case Some(value) => Some(value)
-          case None => ->[HasValues](new NormalField[HasValues](fp.head.name, fp.head.name, false, HasValuesType)) match {
+          case None => getOption(fp.head.name, HasValuesType) match {
             case Some(child: HasValues) => child -> fp.child
             case None => None
           }
@@ -20,7 +20,11 @@ trait HasValues {
     }
   }
 
-  private[alab] def getRaw(name: String): Option[_]
+  private def getOption[T](name: String, dataType: DataType[T]): Option[T] = {
+    dataType.getOption(this, name)
+  }
+
+  def getRaw(name: String): Option[_]
 
   def demand[T](field: Field[T]): T =
     this -> field match {

@@ -6,6 +6,14 @@ import com.alab.conf.{HasValuesType, _}
 trait HasValues {
   self =>
 
+  def kind: Option[Type] = List(guess(_kind), guess(self getOption("kind", StringType))).find(o => o.isDefined).get
+
+  private def guess(sType:  Option[String]) : Option[Type] = sType match {
+    case Some(s) => TypeSystem ? s
+    case None => None
+  }
+  var _kind: Option[String]
+
   def ->[T](field: Field[T]): Option[T] = {
 
     field match {

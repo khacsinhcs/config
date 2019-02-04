@@ -8,10 +8,11 @@ trait HasValues {
 
   def kind: Option[Type] = List(guess(_kind), guess(self getOption("kind", StringType))).find(o => o.isDefined).get
 
-  private def guess(sType:  Option[String]) : Option[Type] = sType match {
-    case Some(s) => TypeSystem ? s
-    case None => None
+  def ? : Validate[List[String]] = kind match {
+    case Some(t) => validate(t)
+    case None => ValidateSuccess()
   }
+
   var _kind: Option[String] = None
 
   def kind(s: String) = _kind = Some(s)
@@ -52,16 +53,21 @@ trait HasValues {
     }
 
   def validate(t: Type): Validate[List[String]] = {
-    val validateResult = t.fields.map(f => f.validate(self))
+    t.fields.map(f => f ? self)
       .foldLeft(List[String]())((ls: List[String], result: Validate[List[String]]) =>
         result match {
           case ValidateSuccess() => ls
           case ValidateFail(xs) => ls ++ xs
         })
-    validateResult match {
+    match {
       case ls if ls.isEmpty => ValidateSuccess()
       case ls => ValidateFail(ls)
     }
+  }
+
+  private def guess(sType: Option[String]): Option[Type] = sType match {
+    case Some(s) => TypeSystem / s
+    case None => None
   }
 
 

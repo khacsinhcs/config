@@ -11,7 +11,7 @@ object TypeSystem {
     this
   }
 
-  def ? (name: String): Option[Type] = {
+  def /(name: String): Option[Type] = {
     types.get(name)
   }
 }

@@ -12,7 +12,11 @@ trait HasValues {
     case Some(s) => TypeSystem ? s
     case None => None
   }
-  var _kind: Option[String]
+  var _kind: Option[String] = None
+
+  def kind(s: String) = _kind = Some(s)
+
+  def kind(t: Type) = _kind = Some(t.n)
 
   def ->[T](field: Field[T]): Option[T] = {
 

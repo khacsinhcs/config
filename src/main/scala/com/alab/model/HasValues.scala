@@ -1,6 +1,6 @@
 package com.alab.model
 
-import com.alab.conf.validate.Validate
+import com.alab.conf.validate.{Validate, ValidateFail, ValidateSuccess}
 import com.alab.conf.{HasValuesType, _}
 
 trait HasValues {
@@ -39,7 +39,18 @@ trait HasValues {
       case None => t
     }
 
-  def validate(): Validate[String] = ???
+  def validate(t: Type): Validate[List[String]] = {
+    val validateResult = t.fields.map(f => f.validate(self))
+      .foldLeft(List[String]())((ls: List[String], result: Validate[List[String]]) =>
+        result match {
+          case ValidateSuccess() => ls
+          case ValidateFail(xs) => ls ++ xs
+        })
+    validateResult match {
+      case ls if ls.isEmpty => ValidateSuccess()
+      case ls => ValidateFail(ls)
+    }
+  }
 
 
   def toString(t: Type): String =

@@ -1,6 +1,7 @@
 package com.alab.conf
 
-import com.alab.conf.validate.{ValidateFail, ValidateSuccess, Validator}
+import com.alab.conf.validate.{Validate, ValidateFail, ValidateSuccess, Validator}
+import com.alab.model.HasValues
 
 trait Field[T] extends Immutable {
   self =>
@@ -20,11 +21,21 @@ trait Field[T] extends Immutable {
     self
   }
 
-  def validate(t: T): List[String] =
-    validators.map(validate => validate.apply(t)).flatMap({
-      case ValidateSuccess() => List()
-      case ValidateFail(s) => List(s)
-    })
+  def validate(t: T): Validate[List[String]] =
+    validators.map(validate => validate.apply(t)).foldLeft(List[String]())((ls: List[String], result: Validate[String]) => result match {
+      case ValidateSuccess() => ls
+      case ValidateFail(s) => ls :+ s
+    }) match {
+      case ls if ls.isEmpty => ValidateSuccess()
+      case ls => ValidateFail(ls)
+    }
+
+  def validate(data: HasValues): Validate[List[String]] = {
+    data -> this match {
+      case Some(value: T) => this.validate(value)
+      case None => ValidateSuccess()
+    }
+  }
 }
 
 case class NormalField[T](name: String, label: String, required: Boolean, dataType: DataType[T]) extends Field[T]

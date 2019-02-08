@@ -1,23 +1,13 @@
 package com.alab.conf
 
 import com.alab.model.App.{Student, _}
-import com.alab.model.{HasValues, MapValues}
 import org.scalatest.{FlatSpec, Matchers}
 
-import scala.collection.immutable.HashMap
+class HasValuesSpec extends FlatSpec with Matchers {
 
-class HasValuesTest extends FlatSpec with Matchers {
-
-  def createMapValue: HasValues = {
-    MapValues(HashMap(
-      "first_name" -> "Sinh",
-      "age" -> "18",
-      "teacher" -> HashMap("first_name" -> "Oanh")
-    ))
-  }
 
   "student hasValue" should "get value" in {
-    val student = createMapValue
+    val student = HasValueHelper.createStudent
 
     import com.alab.model.App.Student._
     student -> first_name should be(Some("Sinh"))
@@ -31,7 +21,7 @@ class HasValuesTest extends FlatSpec with Matchers {
   }
 
   it should "to string has value" in {
-    val student = createMapValue
+    val student = HasValueHelper.createStudent
     val str = student toString Student
     println(str)
     str should include("Student")
@@ -45,12 +35,12 @@ class HasValuesTest extends FlatSpec with Matchers {
 
   "Get FieldPath value" should "be work" in {
     val field = Student.teacher / Teacher.faculty / Faculty.name
-    val student = createMapValue
+    val student = HasValueHelper.createStudent
     student -> field should be(None)
   }
 
   "Get kind" should "from empty context" in {
-    val student = createMapValue
+    val student = HasValueHelper.createStudent
     student.kind should be(None)
 
     student is Student

@@ -3,7 +3,7 @@ package com.alab.conf
 import com.alab.model.App.{Bootstrap, Teacher}
 import org.scalatest.{FlatSpec, Matchers}
 
-class TypeSystemTest extends FlatSpec with Matchers {
+class TypeSystemSpec extends FlatSpec with Matchers {
   Bootstrap allTypes()
 
   "Teacher" should "get front type system" in {

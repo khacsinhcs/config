@@ -1,10 +1,10 @@
-package com.alab.conf
+package com.alab.conf.gen
 
 import com.alab.generate.CaseClassGenerator
 import com.alab.model.App._
 import org.scalatest.{FlatSpec, Matchers}
 
-class GenGenseClassTest extends FlatSpec with Matchers {
+class GenCaseClassSpec extends FlatSpec with Matchers {
   Bootstrap allTypes()
 
   it should "generate case class from Type" in {

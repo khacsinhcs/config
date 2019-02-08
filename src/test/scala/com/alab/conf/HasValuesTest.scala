@@ -9,7 +9,7 @@ import scala.collection.immutable.HashMap
 class HasValuesTest extends FlatSpec with Matchers {
 
   def createMapValue: HasValues = {
-     MapValues(HashMap(
+    MapValues(HashMap(
       "first_name" -> "Sinh",
       "age" -> "18",
       "teacher" -> HashMap("first_name" -> "Oanh")
@@ -47,5 +47,13 @@ class HasValuesTest extends FlatSpec with Matchers {
     val field = Student.teacher / Teacher.faculty / Faculty.name
     val student = createMapValue
     student -> field should be(None)
+  }
+
+  "Get kind" should "from empty context" in {
+    val student = createMapValue
+    student.kind should be(None)
+
+    student is Student
+    student.kind should be(Some(Student))
   }
 }

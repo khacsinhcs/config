@@ -6,18 +6,27 @@ import com.alab.conf.{HasValuesType, _}
 trait HasValues {
   self =>
 
-  def kind: Option[Type] = List(guess(_kind), guess(self getOption("kind", StringType))).find(o => o.isDefined).get
+  def kind: Option[Type] = List(guess(_kind), guess(self getOption("kind", StringType))).find(o => o.isDefined) match {
+    case None => None
+    case Some(value) => value
+  }
 
   def ? : Validate[List[String]] = kind match {
     case Some(t) => validate(t)
     case None => ValidateSuccess()
   }
 
-  var _kind: Option[String] = None
+  protected var _kind: Option[String] = None
 
-  def kind(s: String) = _kind = Some(s)
+  def is(s: String): HasValues = {
+    _kind = Some(s)
+    this
+  }
 
-  def kind(t: Type) = _kind = Some(t.n)
+  def is(t: Type): HasValues = {
+    _kind = Some(t.n)
+    this
+  }
 
   def ->[T](field: Field[T]): Option[T] = {
 
@@ -80,15 +89,16 @@ trait HasValues {
     }).mkString(t.n + "(", ", ", ")")
 
 
-  def +(that: HasValues): HasValues = (name: String) => self.getRaw(name) match {
+  def +:(that: HasValues): HasValues = (name: String) => self.getRaw(name) match {
     case Some(t) => Some(t)
     case None => that.getRaw(name)
   }
 
+  def :+(that: HasValues): HasValues = that +: self
+
 }
 
 case class MapValues(private val values: Map[String, _]) extends HasValues {
-
   override def getRaw(name: String): Option[_] = values.get(name)
 }
 

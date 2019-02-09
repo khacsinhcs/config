@@ -36,6 +36,8 @@ class HasValuesSpec extends FlatSpec with Matchers {
   "Get FieldPath value" should "be work" in {
     val field = Student.teacher / Teacher.faculty / Faculty.name
     val student = HasValueHelper.createStudent
+    val firstName = Student.first_name(student)
+    Student.first_name(student) should be(None)
     student -> field should be(None)
   }
 

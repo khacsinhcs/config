@@ -37,7 +37,7 @@ trait Field[T] extends (HasValues => Option[T]) {
       case ls => ValidateFail(ls)
     }
 
-  override def apply(v1: HasValues): T = v1 -> self
+  override def apply(v1: HasValues): Option[T] = v1 -> self
 }
 
 case class NormalField[T](name: String, label: String, required: Boolean, dataType: DataType[T]) extends Field[T]

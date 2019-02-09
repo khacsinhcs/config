@@ -3,7 +3,7 @@ package com.alab.conf
 import com.alab.conf.validate.{Validate, ValidateFail, ValidateSuccess, Validator}
 import com.alab.model.HasValues
 
-trait Field[T] extends Immutable {
+trait Field[T] extends (HasValues => Option[T]) {
   self =>
 
   private var validators: List[Validator[T, String]] = List[Validator[T, String]]()
@@ -36,6 +36,8 @@ trait Field[T] extends Immutable {
       case ls if ls.isEmpty => ValidateSuccess()
       case ls => ValidateFail(ls)
     }
+
+  override def apply(v1: HasValues): T = v1 -> self
 }
 
 case class NormalField[T](name: String, label: String, required: Boolean, dataType: DataType[T]) extends Field[T]

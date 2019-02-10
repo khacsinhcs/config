@@ -1,7 +1,7 @@
 package com.alab.conf
 
 import com.alab.model.App._
-import com.alab.model.{HasValues, HasValuesMapper, HasValuesMapperHelper, MapValues}
+import com.alab.model.{HasValues, HasValuesMapperHelper, MapValues}
 import com.alab.{Mappable, MappableHelper}
 import org.scalatest.{FlatSpec, Matchers}
 
@@ -29,23 +29,6 @@ class CaseClassHandlerSpec extends FlatSpec with Matchers {
     newStudent.firstName should be(Some("Sinh"))
     newStudent should be(otherStudent)
   }
-
-  class StudentMapper extends HasValuesMapper[StudentClazz] {
-    override def map(hasValues: HasValues, kind: Type): StudentClazz = {
-      StudentClazz({
-        kind ? "first_name" match {
-          case Some(field) => hasValues(field)
-          case None => None
-        }
-      }.asInstanceOf[Option[String]], {
-        kind ? "age" match {
-          case Some(field) => hasValues.demand(field)
-        }
-      }.asInstanceOf[Int])
-
-    }
-  }
-
 
   "hasValue " should "convertible to case class object" in {
     val student: HasValues = HasValueHelper.createStudent

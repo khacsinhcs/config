@@ -28,6 +28,8 @@ trait HasValues {
     this
   }
 
+  def apply[T](f: Field[T]): Option[T] = self -> f
+
   def ->[T](field: Field[T]): Option[T] = {
 
     field match {

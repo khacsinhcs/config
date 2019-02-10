@@ -34,9 +34,28 @@ object Mappable {
       val name = field.asTerm.name
       val key = name.decodedName.toString
       val returnType = tpe.decl(name).typeSignature
+      val isOption = returnType.toString.contains("Option")
+      val fromMap = if (isOption)
+        q"""
+           {
+            map.get($key) match {
+              case Some(Some(t)) => Some(t)
+              case None => None
+              case Some(t) => Some(t)
+            }
+           }.asInstanceOf[$returnType]
+         """ else
+        q"""
+         {
+          map.get($key) match {
+            case Some(Some(t)) => t
+            case Some(t) => t
+          }
+         }.asInstanceOf[$returnType]
+       """
       println(returnType)
-
-      (q"$key -> t.$name", q"map($key).asInstanceOf[$returnType]")
+      println(fromMap)
+      (q"$key -> t.$name", fromMap)
     }.unzip
 
 

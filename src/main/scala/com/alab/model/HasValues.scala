@@ -99,7 +99,10 @@ trait HasValues {
 }
 
 case class MapValues(private val values: Map[String, _]) extends HasValues {
-  override def getRaw(name: String): Option[_] = values.get(name)
+  override def getRaw(name: String): Option[_] = values.get(name) match {
+    case Some(Some(t)) => Some(t)
+    case other => other
+  }
 }
 
 object EmptyValues extends HasValues {

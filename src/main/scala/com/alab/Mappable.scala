@@ -19,11 +19,9 @@ object Mappable {
   implicit def materializeMappable[T]: Mappable[T] = macro materializeMappableImpl[T]
 
   def materializeMappableImpl[T: c.WeakTypeTag](c: blackbox.Context): c.Expr[Mappable[T]] = {
-    println("Start debug")
     import c.universe._
     val tpe = weakTypeOf[T]
     val companion = tpe.typeSymbol.companion
-    println(companion)
 
     val fields = tpe.decls.collectFirst {
       case m: MethodSymbol if m.isPrimaryConstructor => m
@@ -53,8 +51,6 @@ object Mappable {
           }
          }.asInstanceOf[$returnType]
        """
-      println(returnType)
-      println(fromMap)
       (q"$key -> t.$name", fromMap)
     }.unzip
 

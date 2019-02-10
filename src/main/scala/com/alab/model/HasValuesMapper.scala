@@ -1,7 +1,5 @@
 package com.alab.model
 
-import com.alab.Mappable
-
 import scala.language.experimental.macros
 import scala.reflect.macros.blackbox
 
@@ -62,5 +60,5 @@ object HasValuesMapper {
 }
 
 object HasValuesMapperHelper {
-  def materialize[T: Mappable](hasValue: HasValues): T = implicitly[HasValuesMapper[T]].map(hasValue)
+  def materialize[T: HasValuesMapper](hasValue: HasValues): T = implicitly[HasValuesMapper[T]].map(hasValue)
 }

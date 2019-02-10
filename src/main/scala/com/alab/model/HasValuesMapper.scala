@@ -44,17 +44,17 @@ object HasValuesMapper {
             }.asInstanceOf[$returnType]
           """
     }
-    val x = c.Expr[HasValuesMapper[T]] {
+    c.Expr[HasValuesMapper[T]] {
       q"""
-      new HasValuesMapper[$tpe] {
-        def map(hasValues: HasValues, kind: Type): $tpe = {
-          $companion(..$fromMapParams)
-        }
-      }
+          new HasValuesMapper[$tpe] {
+            import com.alab.model.HasValues
+            import com.alab.conf.Type
+            def map(hasValues: HasValues, kind: Type): $tpe = {
+              $companion(..$fromMapParams)
+            }
+          }
     """
     }
-    println(x)
-    x
   }
 
   private def normalizeField(key: String): String = new String(key.toCharArray.flatMap(c => if (c.isUpper) Array('_', c.toLower) else Array(c)))

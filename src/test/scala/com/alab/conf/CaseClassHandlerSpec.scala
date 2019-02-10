@@ -22,7 +22,6 @@ class CaseClassHandlerSpec extends FlatSpec with Matchers {
     map should contain key "firstName"
     val student = MapValues(map)
     student(Student.first_name)
-    val myMap: Map[String, Any] = Map("firstName" -> "Sinh", "lastName" -> "Le", "age" -> 18)
 
     val newStudent = MappableHelper.materialize[StudentClazz](Map("firstName" -> "Sinh", "lastName" -> "Le", "age" -> 18))
 

@@ -46,7 +46,7 @@ object HasValuesMapper {
     }
     c.Expr[HasValuesMapper[T]] {
       q"""
-          new HasValuesMapper[$tpe] {
+          new com.alab.model.HasValuesMapper[$tpe] {
             import com.alab.model.HasValues
             import com.alab.conf.Type
             def map(hasValues: HasValues, kind: Type): $tpe = {

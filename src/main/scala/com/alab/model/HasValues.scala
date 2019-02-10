@@ -98,6 +98,14 @@ trait HasValues {
 
   def :+(that: HasValues): HasValues = that +: self
 
+  def materialize[T: HasValuesMapper]: Either[T, String] = {
+    kind match {
+      case Some(k) => Left(materialize[T](k))
+      case None => Right("Could not guess type in this field")
+    }
+  }
+
+  def materialize[T: HasValuesMapper](kind: Type): T = HasValuesMapperHelper.materialize[T](self, kind)
 }
 
 case class MapValues(private val values: Map[String, _]) extends HasValues {

@@ -32,6 +32,8 @@ class Type(val n: String, des: String) extends HasType {
 
   override def ?(name: String): Option[Field[_]] = mapFields.get(name)
 
+  def apply(name: String): Option[Field[_]] = this ? name
+
   def f[T](field: Field[T]): Field[T] = {
     mapFields.put(field.name, field)
     field

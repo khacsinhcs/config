@@ -30,7 +30,7 @@ object HasValuesMapper {
 
       if (isOption)
         q"""{
-            (kind ? $f) match {
+            kind($f) match {
               case Some(field) => hasValues(field)
               case None => None
             }
@@ -38,7 +38,7 @@ object HasValuesMapper {
        """ else
         q"""
             {
-              (kind ? $f) match {
+              kind($f) match {
                 case Some(field) => hasValues.demand(field)
               }
             }.asInstanceOf[$returnType]

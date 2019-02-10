@@ -69,5 +69,5 @@ object Mappable {
 object MappableHelper {
   def mapify[T: Mappable](t: T) = implicitly[Mappable[T]].toMap(t)
 
-  def materialize[T: Mappable](map: Map[String, Any]) = implicitly[Mappable[T]].fromMap(map)
+  def materialize[Type: Mappable](map: Map[String, Any]): Type = implicitly[Mappable[Type]].fromMap(map)
 }

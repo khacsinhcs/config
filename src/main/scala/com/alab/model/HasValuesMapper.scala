@@ -1,10 +1,12 @@
 package com.alab.model
 
+import com.alab.conf.Type
+
 import scala.language.experimental.macros
 import scala.reflect.macros.blackbox
 
 trait HasValuesMapper[T] {
-  def map(hasValues: HasValues): T
+  def map(hasValues: HasValues, kind: Type): T
 }
 
 object HasValuesMapper {
@@ -13,7 +15,6 @@ object HasValuesMapper {
   def materializeHasValuesMappableImpl[T: c.WeakTypeTag](c: blackbox.Context): c.Expr[HasValuesMapper[T]] = {
     import c.universe._
     val tpe = weakTypeOf[T]
-    val tpeName = tpe.toString
     val companion = tpe.typeSymbol.companion
 
     val fields = tpe.decls.collectFirst {
@@ -30,7 +31,7 @@ object HasValuesMapper {
       if (isOption)
         q"""{
             (kind ? $f) match {
-              case Some(field) => hasValues -> field
+              case Some(field) => hasValues(field)
               case None => None
             }
          }.asInstanceOf[$returnType]
@@ -43,22 +44,22 @@ object HasValuesMapper {
             }.asInstanceOf[$returnType]
           """
     }
-    c.Expr[HasValuesMapper[T]] {
+    val x = c.Expr[HasValuesMapper[T]] {
       q"""
-      new HasValuesMappable[$tpe] {
-        def map(hasValues: HasValues): $tpe = {
-          (TypeSystem / $tpeName) match {
-            case Some(kind) => $companion(..$fromMapParams)
-          }
+      new HasValuesMapper[$tpe] {
+        def map(hasValues: HasValues, kind: Type): $tpe = {
+          $companion(..$fromMapParams)
         }
       }
     """
     }
+    println(x)
+    x
   }
 
   private def normalizeField(key: String): String = new String(key.toCharArray.flatMap(c => if (c.isUpper) Array('_', c.toLower) else Array(c)))
 }
 
 object HasValuesMapperHelper {
-  def materialize[T: HasValuesMapper](hasValue: HasValues): T = implicitly[HasValuesMapper[T]].map(hasValue)
+  def materialize[T: HasValuesMapper](hasValue: HasValues, kind: Type): T = implicitly[HasValuesMapper[T]].map(hasValue, kind)
 }

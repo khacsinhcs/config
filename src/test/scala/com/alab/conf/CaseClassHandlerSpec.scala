@@ -35,7 +35,7 @@ class CaseClassHandlerSpec extends FlatSpec with Matchers {
   "hasValue " should "convertible to case class object" in {
     val student: HasValues = HasValueHelper.createStudent
 
-    val stu = HasValuesMapperHelper.materialize[StudentClazz](student)
+    val stu = HasValuesMapperHelper.materialize[StudentClazz](student, Student)
 
     stu.firstName should be(Some("Sinh"))
   }

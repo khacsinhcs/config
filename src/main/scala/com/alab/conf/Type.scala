@@ -1,6 +1,7 @@
 package com.alab.conf
 
 trait HasType {
+  def apply(name: String): Option[Field[_]] = this ? name
 
   def ?(name: String): Option[Field[_]]
 
@@ -22,17 +23,13 @@ trait HasType {
 }
 
 class Type(val n: String, des: String) extends HasType {
-
   import scala.collection.mutable
 
   private val mapFields: mutable.Map[String, Field[_]] = mutable.LinkedHashMap()
 
   TypeSystem ++ this
 
-
   override def ?(name: String): Option[Field[_]] = mapFields.get(name)
-
-  def apply(name: String): Option[Field[_]] = this ? name
 
   def f[T](field: Field[T]): Field[T] = {
     mapFields.put(field.name, field)

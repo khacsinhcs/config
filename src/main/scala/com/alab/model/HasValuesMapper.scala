@@ -1,16 +1,18 @@
 package com.alab.model
 
+import com.alab.Mappable
+
 import scala.language.experimental.macros
 import scala.reflect.macros.blackbox
 
-trait HasValuesMappable[T] {
+trait HasValuesMapper[T] {
   def map(hasValues: HasValues): T
 }
 
-object HasValuesMappable {
-  implicit def materializeHasValuesMappable[T]: HasValuesMappable[T] = macro materializeHasValuesMappableImpl[T]
+object HasValuesMapper {
+  implicit def materializeHasValuesMappable[T]: HasValuesMapper[T] = macro materializeHasValuesMappableImpl[T]
 
-  def materializeHasValuesMappableImpl[T: c.WeakTypeTag](c: blackbox.Context): c.Expr[HasValuesMappable[T]] = {
+  def materializeHasValuesMappableImpl[T: c.WeakTypeTag](c: blackbox.Context): c.Expr[HasValuesMapper[T]] = {
     import c.universe._
     val tpe = weakTypeOf[T]
     val tpeName = tpe.toString
@@ -43,7 +45,7 @@ object HasValuesMappable {
             }.asInstanceOf[$returnType]
           """
     }
-    c.Expr[HasValuesMappable[T]] {
+    c.Expr[HasValuesMapper[T]] {
       q"""
       new HasValuesMappable[$tpe] {
         def map(hasValues: HasValues): $tpe = {
@@ -57,4 +59,8 @@ object HasValuesMappable {
   }
 
   private def normalizeField(key: String): String = new String(key.toCharArray.flatMap(c => if (c.isUpper) Array('_', c.toLower) else Array(c)))
+}
+
+object HasValuesMapperHelper {
+  def materialize[T: Mappable](hasValue: HasValues): T = implicitly[HasValuesMapper[T]].map(hasValue)
 }

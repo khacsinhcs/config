@@ -2,6 +2,7 @@ package com.alab.model
 
 import com.alab.conf.validate.{Validate, ValidateFail, ValidateSuccess}
 import com.alab.conf.{HasValuesType, _}
+import com.alab.{Mappable, MappableHelper}
 
 trait HasValues {
   self =>
@@ -46,7 +47,7 @@ trait HasValues {
   }
 
   private def getOption[T](name: String, dataType: DataType[T]): Option[T] = {
-    dataType.getOption(this, name)
+    dataType.getOption(self, name)
   }
 
   def getRaw(name: String): Option[_]
@@ -63,7 +64,7 @@ trait HasValues {
       case None => t
     }
 
-  def validate(t: Type): Validate[List[String]] = {
+  def validate(implicit t: Type): Validate[List[String]] = {
     t.fields.map(f => f ? self)
       .foldLeft(List[String]())((ls: List[String], result: Validate[List[String]]) =>
         result match {
@@ -82,7 +83,7 @@ trait HasValues {
   }
 
 
-  def toString(t: Type): String =
+  def toString(implicit t: Type): String =
     t.fields.flatMap(f => {
       ->(f) match {
         case None => None
@@ -98,14 +99,13 @@ trait HasValues {
 
   def :+(that: HasValues): HasValues = that +: self
 
-  def materialize[T: HasValuesMapper]: Either[T, String] = {
-    kind match {
-      case Some(k) => Left(materialize[T](k))
-      case None => Right("Could not guess type in this field")
-    }
-  }
+  def materialize[T: HasValuesMapper](implicit kind: Type): T = HasValuesMapperHelper.materialize[T](self, kind)
+}
 
-  def materialize[T: HasValuesMapper](kind: Type): T = HasValuesMapperHelper.materialize[T](self, kind)
+
+object HasValues {
+  def from[T: Mappable](t: T): HasValues = MapValues(MappableHelper.mapify[T](t))
+
 }
 
 case class MapValues(private val values: Map[String, _]) extends HasValues {

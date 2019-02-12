@@ -24,7 +24,7 @@ trait Field[T] extends (HasValues => Option[T]) {
   def ?(data: HasValues): Validate[List[String]] = {
     data -> this match {
       case Some(value: T) => this ? value
-      case None => ValidateSuccess()
+      case None => if (required) ValidateFail(List(name + " is required")) else ValidateSuccess()
     }
   }
 

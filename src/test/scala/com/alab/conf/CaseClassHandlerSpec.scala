@@ -16,6 +16,8 @@ class CaseClassHandlerSpec extends FlatSpec with Matchers {
   case class StudentClazz(firstName: Option[String],
                           age: Int)
 
+  implicit val kind: Type = Student
+
   "student" should "mapify" in {
     val map = MappableHelper.mapify(stu)
     map should contain key "firstName"
@@ -35,13 +37,13 @@ class CaseClassHandlerSpec extends FlatSpec with Matchers {
     val stu = HasValuesMapperHelper.materialize[StudentClazz](student, Student)
     stu.firstName should be(Some("Sinh"))
 
-    val _stu = student.materialize[StudentClazz](Student)
+    val _stu = student.materialize[StudentClazz]
     stu should be(_stu)
   }
 
   "hasValue " should "convert direct to obj" in {
     val student: HasValues = HasValueHelper.createStudent
-    val stu = student.materialize[StudentClazz](Student)
+    val stu = student.materialize[StudentClazz]
     stu.firstName should be(Some("Sinh"))
   }
 }

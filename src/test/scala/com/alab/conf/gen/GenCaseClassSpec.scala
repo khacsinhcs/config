@@ -11,7 +11,7 @@ class GenCaseClassSpec extends FlatSpec with Matchers {
     CaseClassGenerator.generate(Student)
     val caseStudent = CaseClassGenerator.generate(Student)
     println(caseStudent)
-    caseStudent should be ("case class Student(id: Option[Int], firstName: String, lastName: String, phone: Option[String], age: Int, teacher: String)")
+    caseStudent should be("case class Student(id: Option[Int], firstName: String, lastName: String, phone: Option[String], age: Int, teacher: String, subjects: List[String])")
   }
 
   it should "generate all types" in {

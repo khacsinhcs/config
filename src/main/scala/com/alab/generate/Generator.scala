@@ -22,13 +22,18 @@ object CaseClassGenerator extends Generator {
 
     def params(fields: Iterable[Field[_]]): String = {
       fields.map(f => {
-        val `type` = f.dataType match {
+        def typeToString(dataType: DataType[_]) = dataType match {
           case StringType => "String"
           case PhoneType => "String"
           case StringKey => "String"
           case NumberType => "Double"
           case IntType => "Int"
           case IdKey => "Int"
+        }
+
+        val `type` = f.dataType match {
+          case ls: ListType[_] => "List[" + typeToString(ls.dataType) + "]"
+          case t => typeToString(t)
         }
         val dataType = if (f.required) `type` else "Option[" + `type` + "]"
         normalizeName(f.name) + ": " + dataType

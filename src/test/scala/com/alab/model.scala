@@ -26,6 +26,7 @@ package object App {
   object Student extends Type(n = "Student", des = "Student") with HasId with HasContactInfo {
     val age: Field[Int] = f("age", IntType)
     val teacher: FK[String] = fk("teacher", StringKey, Teacher)
+    val subject: Field[List[String]] = f("subjects", StringType.listType)
   }
 
   object Faculty extends Type(n = "Faculty", des = "The teaching staff of a university or college, or of one of its departments or divisions, viewed as a body.") with HasId {

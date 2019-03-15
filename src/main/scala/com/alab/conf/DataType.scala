@@ -17,7 +17,11 @@ trait DataType[T] extends Immutable {
 
   def validate(value: T): Validate[String]
 
-  def getOption(values: HasValues, name: String): Option[T]
+  def getOption(values: HasValues, name: String): Option[T] = cast(values.getRaw(name))
+
+  def cast(value: Option[_]): Option[T]
+
+  def listType: ListType[T] = new ListType[T](this)
 }
 
 trait StringType extends DataType[String] {
@@ -27,8 +31,9 @@ trait StringType extends DataType[String] {
 
   override implicit val classTag: ClassTag[String] = implicitly[ClassTag[String]]
 
-  override def getOption(values: HasValues, name: String): Option[String] = values.getRaw(name) match {
+  override def cast(value: Option[_]): Option[String] = value match {
     case Some(s: String) => Some(s)
+    case Some(x) => Some(x.toString)
     case _ => None
   }
 }
@@ -88,7 +93,7 @@ object NumberType extends DataType[Double] {
   override implicit val classTag: ClassTag[Double] = implicitly[ClassTag[Double]]
 
 
-  override def getOption(values: HasValues, name: String): Option[Double] = values.getRaw(name) match {
+  override def cast(value: Option[_]): Option[Double] = value match {
     case Some(d: Double) => Some(d)
     case Some(s: String) => Some(fromString(s))
     case Some(d: Int) => Some(d)
@@ -107,7 +112,8 @@ object NumberType extends DataType[Double] {
 }
 
 class IntegerType extends DataType[Int] {
-  override def getOption(values: HasValues, name: String): Option[Int] = values.getRaw(name) match {
+
+  override def cast(value: Option[_]): Option[Int] = value match {
     case Some(d: Double) => Some(d.intValue())
     case Some(s: String) => Some(fromString(s))
     case Some(d: Int) => Some(d)
@@ -134,7 +140,7 @@ object IdKey extends IntegerType
 object HasValuesType extends DataType[HasValues] {
   override implicit val classTag: ClassTag[HasValues] = implicitly[ClassTag[HasValues]]
 
-  override def getOption(values: HasValues, name: String): Option[HasValues] = values.getRaw(name) match {
+  override def cast(value: Option[_]): Option[HasValues] = value match {
     case Some(hasValue: HasValues) => Some(hasValue)
     case Some(s: String) => Some(fromString(s))
     case Some(map: Map[String, _]) => Some(MapValues(map))
@@ -148,4 +154,25 @@ object HasValuesType extends DataType[HasValues] {
   override def display(value: HasValues, format: String): String = ???
 
   override def validate(value: HasValues): Validate[String] = ValidateSuccess()
+}
+
+class ListType[T](val dataType: DataType[T]) extends DataType[List[T]] {
+  override implicit val classTag: ClassTag[List[T]] = implicitly[ClassTag[List[T]]]
+
+  override def fromString(str: String): List[T] = ???
+
+  override def display(value: List[T], format: String): String = toString(value)
+
+  override def toString(t: List[T]): String = t match {
+    case List() => "[]"
+    case ls => ls.map(item => item.toString).mkString("[", ",", "]")
+  }
+
+  override def validate(value: List[T]): Validate[String] = ValidateSuccess()
+
+  override def cast(value: Option[_]): Option[List[T]] = value match {
+    case None => None
+    case Some(ls: List[T]) => Some(ls)
+    case Some(t: T) => Some(List(t))
+  }
 }

@@ -9,7 +9,8 @@ object HasValueHelper {
     MapValues(HashMap(
       "first_name" -> "Sinh",
       "age" -> "18",
-      "teacher" -> HashMap("first_name" -> "Oanh")
+      "teacher" -> HashMap("first_name" -> "Oanh"),
+      "subjects" -> List("Math", "Game")
     ))
   }
 }

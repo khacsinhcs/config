@@ -13,6 +13,8 @@ class HasValuesSpec extends FlatSpec with Matchers {
     student -> first_name should be(Some("Sinh"))
     student -> last_name should be(None)
     student -> age should be(Some(18))
+    student demand subjects should have size 2
+    println(student demand subjects)
     student demand first_name should be("Sinh")
     student -> (teacher / first_name) should be(Some("Oanh"))
     the[IllegalStateException] thrownBy {

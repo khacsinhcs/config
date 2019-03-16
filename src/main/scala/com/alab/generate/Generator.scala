@@ -33,7 +33,7 @@ object CaseClassGenerator extends Generator {
 
         val `type` = f.dataType match {
           case ls: ListType[_] => "List[" + typeToString(ls.dataType) + "]"
-          case t => typeToString(t)
+          case _ => typeToString _
         }
         val dataType = if (f.required) `type` else "Option[" + `type` + "]"
         normalizeName(f.name) + ": " + dataType

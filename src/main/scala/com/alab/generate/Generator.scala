@@ -21,7 +21,7 @@ object CaseClassGenerator extends Generator {
 
 
     def params(fields: Iterable[Field[_]]): String = {
-      fields.map(f => {
+      fields.filter(f => !f.isInstanceOf[FunctionField[_]]).map(f => {
         def typeToString(dataType: DataType[_]) = dataType match {
           case StringType => "String"
           case PhoneType => "String"

@@ -1,5 +1,7 @@
 package com.alab.conf
 
+import com.alab.model.HasValues
+
 trait HasType {
   def apply(name: String): Option[Field[_]] = this ? name
 
@@ -14,6 +16,11 @@ trait HasType {
   def f[T](name: String, dataType: DataType[T]): Field[T] = f[T](name, name, dataType)
 
   def fk[T](field: FK[T]): FK[T]
+
+  // Function field
+  def func[T](name: String, label: String, dataType: DataType[T], func: HasValues => Option[T]): Field[T] = f[T](FunctionField[T](name, label, dataType, func))
+
+  def func[T](name: String, dataType: DataType[T], func: HasValues => Option[T]): Field[T] = f[T](FunctionField[T](name, name, dataType, func))
 
   def fk[T](name: String, label: String, required: Boolean, dataType: DataType[T], kind: Type): FK[T] = fk[T](new FK[T](name, label, required, dataType, kind))
 

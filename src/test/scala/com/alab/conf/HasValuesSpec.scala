@@ -11,6 +11,8 @@ class HasValuesSpec extends FlatSpec with Matchers {
 
     import com.alab.model.App.Student._
     student -> first_name should be(Some("Sinh"))
+    student -> full_name should be(Some("Sinh"))
+
     student -> last_name should be(None)
     student -> age should be(Some(18))
     student demand subjects should have size 2

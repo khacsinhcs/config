@@ -7,6 +7,12 @@ package object App {
   trait HasName extends HasType {
     val first_name: Field[String] = f("first_name", "First name", StringType)
     val last_name: Field[String] = f("last_name", "Last name", StringType)
+    val full_name: Field[String] = func("full_name", "Full name", StringType, hasValues => {
+      if (!(hasValues contains first_name) && !(hasValues contains last_name)) {
+        None
+      }
+      Some((hasValues.get(first_name, "") + " " + hasValues.get(last_name, "")).trim)
+    })
   }
 
   trait HasPhone extends HasType {

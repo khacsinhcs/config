@@ -37,11 +37,16 @@ trait Field[T] extends (HasValues => Option[T]) {
       case ls => ValidateFail(ls)
     }
 
-  override def apply(v1: HasValues): Option[T] = v1 -> self
+  override def apply(v1: HasValues): Option[T] = self.dataType.getOption(v1, name)
 }
 
 case class NormalField[T](name: String, label: String, required: Boolean, dataType: DataType[T]) extends Field[T]
 
+case class FunctionField[T](name: String, label: String, dataType: DataType[T], func: HasValues => Option[T]) extends Field[T] {
+  override def required: Boolean = false
+
+  override def apply(v1: HasValues): Option[T] = func(v1)
+}
 /**
   * Foreign key
   */

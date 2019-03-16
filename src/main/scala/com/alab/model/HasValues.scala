@@ -42,7 +42,7 @@ trait HasValues {
             case None => None
           }
         }
-      case _ => field.dataType.getOption(self, field.name)
+      case _ => field apply self
     }
   }
 
@@ -57,6 +57,14 @@ trait HasValues {
       case Some(t) => t
       case None => throw new IllegalStateException(s"$field is demand")
     }
+
+  def contains(f: Field[_]): Boolean = {
+    this -> f match {
+      case Some(_) => true
+      case None => false
+    }
+  }
+
 
   def get[T](field: Field[T], t: T): T =
     this -> field match {

@@ -76,6 +76,9 @@ case class FieldPath[T](mergeLabels: Boolean, paths: Array[FK[_]], leaf: Field[T
 
   def child: Field[T] = if (paths.length == 1) leaf else FieldPath(mergeLabels, paths.tail, leaf)
 
+
+  override def apply(v1: HasValues): Option[T] = super.apply(v1)
+
   def head: FK[_] = paths.length match {
     case l if l > 0 => paths.head
   }

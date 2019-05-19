@@ -1,0 +1,11 @@
+@(pack: String, name: String)
+	@import com.alab.conf.TypeSystem
+	@import com.alab.generate.CaseClassGenerator
+
+	package @pack
+
+	package object @name \{
+@for(t <- TypeSystem.types.values) {
+	@CaseClassGenerator.generate(t)
+}
+	}

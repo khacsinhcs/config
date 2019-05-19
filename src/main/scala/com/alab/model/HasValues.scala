@@ -31,24 +31,19 @@ trait HasValues {
 
   def apply[T](f: Field[T]): Option[T] = self -> f
 
-  def ->[T](field: Field[T]): Option[T] = {
-
-    field match {
-      case fp: FieldPath[T] =>
-        getOption(fp.name, fp.dataType) match {
-          case Some(value) => Some(value)
-          case None => getOption(fp.head.name, HasValuesType) match {
-            case Some(child: HasValues) => child -> fp.child
-            case None => None
-          }
+  def ->[T](field: Field[T]): Option[T] = field match {
+    case fp: FieldPath[T] =>
+      getOption(fp.name, fp.dataType) match {
+        case Some(value) => Some(value)
+        case None => getOption(fp.head.name, HasValuesType) match {
+          case Some(child: HasValues) => child -> fp.child
+          case None => None
         }
-      case _ => field apply self
-    }
+      }
+    case _ => field apply self
   }
 
-  private def getOption[T](name: String, dataType: DataType[T]): Option[T] = {
-    dataType.getOption(self, name)
-  }
+  private def getOption[T](name: String, dataType: DataType[T]): Option[T] = dataType.getOption(self, name)
 
   def getRaw(name: String): Option[_]
 
@@ -58,21 +53,18 @@ trait HasValues {
       case None => throw new IllegalStateException(s"$field is demand")
     }
 
-  def contains(f: Field[_]): Boolean = {
-    this -> f match {
-      case Some(_) => true
-      case None => false
-    }
+  def contains(f: Field[_]): Boolean = this -> f match {
+    case Some(_) => true
+    case None => false
   }
 
 
-  def get[T](field: Field[T], t: T): T =
-    this -> field match {
-      case Some(value) => value
-      case None => t
-    }
+  def get[T](field: Field[T], t: T): T = this -> field match {
+    case Some(value) => value
+    case None => t
+  }
 
-  def validate(implicit t: Type): Validate[List[String]] = {
+  def validate(implicit t: Type): Validate[List[String]] =
     t.fields.map(f => f ? self)
       .foldLeft(List[String]())((ls: List[String], result: Validate[List[String]]) =>
         result match {
@@ -83,7 +75,6 @@ trait HasValues {
       case ls if ls.isEmpty => ValidateSuccess()
       case ls => ValidateFail(ls)
     }
-  }
 
   private def guess(sType: Option[String]): Option[Type] = sType match {
     case Some(s) => TypeSystem / s

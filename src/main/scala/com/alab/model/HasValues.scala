@@ -2,8 +2,6 @@ package com.alab.model
 
 import com.alab.conf.validate.{Validate, ValidateFail, ValidateSuccess}
 import com.alab.conf.{HasValuesType, _}
-import com.alab.implicits.{HasValuesMapper, HasValuesMapperHelper}
-import com.alab.{Mappable, MappableHelper}
 
 trait HasValues {
   self =>
@@ -98,13 +96,6 @@ trait HasValues {
   }
 
   def :+(that: HasValues): HasValues = that +: self
-
-  def materialize[T: HasValuesMapper](implicit kind: Type): T = HasValuesMapperHelper.materialize[T](self, kind)
-}
-
-
-object HasValues {
-  def from[T: Mappable](t: T): HasValues = MapValues(MappableHelper.mapify[T](t))
 
 }
 

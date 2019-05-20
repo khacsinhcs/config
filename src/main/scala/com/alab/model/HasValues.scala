@@ -2,6 +2,7 @@ package com.alab.model
 
 import com.alab.conf.validate.{Validate, ValidateFail, ValidateSuccess}
 import com.alab.conf.{HasValuesType, _}
+import com.alab.implicits.{HasValuesMapper, HasValuesMapperHelper}
 import com.alab.{Mappable, MappableHelper}
 
 trait HasValues {

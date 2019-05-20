@@ -1,6 +1,7 @@
-package com.alab.model
+package com.alab.implicits
 
 import com.alab.conf.Type
+import com.alab.model.HasValues
 
 import scala.language.experimental.macros
 import scala.reflect.macros.blackbox
@@ -46,7 +47,7 @@ object HasValuesMapper {
     }
     c.Expr[HasValuesMapper[T]] {
       q"""
-          new com.alab.model.HasValuesMapper[$tpe] {
+          new com.alab.implicits.HasValuesMapper[$tpe] {
             import com.alab.model.HasValues
             import com.alab.conf.Type
             def map(hasValues: HasValues, kind: Type): $tpe = {

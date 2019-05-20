@@ -1,7 +1,8 @@
 package com.alab.conf
 
+import com.alab.implicits.HasValuesMapperHelper
 import com.alab.model.App._
-import com.alab.model.{HasValues, HasValuesMapperHelper, MapValues}
+import com.alab.model.{HasValues, MapValues}
 import com.alab.{Mappable, MappableHelper}
 import org.scalatest.{FlatSpec, Matchers}
 
